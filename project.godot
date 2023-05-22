@@ -52,3 +52,13 @@ remove_component={
 "events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":2,"position":Vector2(225, 14),"global_position":Vector2(229, 57),"factor":1.0,"button_index":2,"pressed":true,"double_click":false,"script":null)
 ]
 }
+manual_mass={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":77,"key_label":0,"unicode":109,"echo":false,"script":null)
+]
+}
+
+[physics]
+
+3d/default_linear_damp=0.0
+3d/default_angular_damp=0.0

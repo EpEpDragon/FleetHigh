@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://cnvxrp7rxstug"]
+[gd_scene load_steps=5 format=3 uid="uid://cnvxrp7rxstug"]
 
 [ext_resource type="PackedScene" uid="uid://jtqo7mignypg" path="res://Nodes/WeldPoint.tscn" id="1_kggv6"]
+[ext_resource type="Script" path="res://Nodes/buildable_component.gd" id="1_oxrmn"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_cr207"]
 size = Vector3(4, 4, 4)
@@ -10,15 +11,20 @@ size = Vector3(3.9, 3.9, 3.9)
 
 [node name="ShipComponent" type="CollisionShape3D"]
 shape = SubResource("BoxShape3D_cr207")
+script = ExtResource("1_oxrmn")
+mass = 4.0
+inertia = Vector3(10.67, 10.67, 10.67)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("BoxMesh_a7ht7")
 
 [node name="WeldPoint" parent="." instance=ExtResource("1_kggv6")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 0)
+rotation_edit_mode = 2
 
 [node name="WeldPoint2" parent="." instance=ExtResource("1_kggv6")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -2, 0, 0)
+rotation_edit_mode = 2
 
 [node name="WeldPoint3" parent="." instance=ExtResource("1_kggv6")]
 transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 2, 0)

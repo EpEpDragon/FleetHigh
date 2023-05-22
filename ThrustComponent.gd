@@ -1,11 +1,13 @@
-extends CollisionShape3D
+extends Node3D
 
-@onready var ship := get_parent()
+@onready var buildable := get_parent()
+@onready var ship := buildable.get_parent()
 @onready var particles := $GPUParticles3D
 @onready var base_lifetime = particles.lifetime
-var thrust = 10_000 # N
+@onready var thrust_position = buildable.position
 
-var id : int
+@export var thrust = 0.0 # kN
+
 
 var active = false:
 	set(value):
@@ -19,7 +21,6 @@ var throttle := 0.0:
 
 func _ready():
 	ship.engines.append(self)
-	id = ship.engines.size()-1
 
 func _exit_tree():
 	ship.engines.erase(self)

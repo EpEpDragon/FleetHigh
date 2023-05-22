@@ -23,8 +23,10 @@ var is_remove_component := false
 @onready var camera := $Camera3D
 @onready var space_state := get_world_3d().direct_space_state
 
-# Called when the node enters the scene tree for the first time.
+
+
 func _ready():
+	# Setup raycast queries for placing and removing
 	place_ray_query.collide_with_areas = true
 	place_ray_query.collide_with_bodies = false
 
@@ -43,44 +45,39 @@ func _input(event):
 			state = TEST
 		else:
 			state = BUILD
-			
 
 
 func _physics_process(delta):
 	if state_change:
+		# States for physics frozen and unfrozen
 		if state == BUILD:
-			pass
 			ship.freeze = true
 			ship.position = Vector3(0,100,0)
 			ship.rotation = Vector3.ZERO
 		elif state == TEST:
 			ship.freeze = false
 	
+	# Place/Remove component
 	if is_place_component:
 		var result = click_query(place_ray_query)
 		if result:
-			place_component(result.collider.to_global(result.collider.weld_position))
+			place_component(result.collider.basis * result.collider.weld_position + result.collider.buildable.position)
 		is_place_component = false
 	elif is_remove_component:
 		var result = click_query(remove_ray_query)
 		if result:
 			remove_component(result.shape)
 		is_remove_component = false
-		
+
 
 func place_component(_position):
 	var component = component_to_build.instantiate()
+	component.position = _position
 	ship.add_child(component)
-	component.global_position = _position
+
 
 func remove_component(shape_id):
-	var owner = ship.shape_find_owner(shape_id)
-	print("Before remove")
-	print("ShapeID: " + str(shape_id))
-	print("ShapeOwner: " + str(ship.shape_find_owner(shape_id)))
-	print(ship.get_shape_owners())
-#	ship.remove_shape_owner(owner)
-	ship.remove_child(ship.shape_owner_get_owner(owner))
+	ship.remove_child(ship.shape_owner_get_owner(ship.shape_find_owner(shape_id)))
 
 
 func click_query(query):

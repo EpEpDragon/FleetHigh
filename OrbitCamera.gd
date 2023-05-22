@@ -23,12 +23,10 @@ func _input(event):
 	if event.is_action_pressed("orbit"):
 		state = ORBIT
 		update_orbit = true
-		print("orbit")
 	elif event.is_action_released("orbit"):
 		state = REST
 		orbit_point_visual.visible = false
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-		print("rest")
 	
 	if state == ORBIT:
 		if event is InputEventMouseMotion:
