@@ -1,0 +1,52 @@
+[gd_scene load_steps=10 format=3 uid="uid://nptx0ijjubxp"]
+
+[ext_resource type="PackedScene" uid="uid://jtqo7mignypg" path="res://Nodes/WeldPoint.tscn" id="1_a8nnc"]
+[ext_resource type="Script" path="res://Nodes/ShipEngine.gd" id="1_hsgen"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_6box7"]
+size = Vector3(2, 4, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_4pbik"]
+size = Vector3(2, 4, 2)
+
+[sub_resource type="Curve" id="Curve_c0una"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_ssih6"]
+curve = SubResource("Curve_c0una")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ysl5p"]
+emission_shape = 1
+emission_sphere_radius = 1.0
+direction = Vector3(0, -1, 0)
+spread = 10.0
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 150.0
+initial_velocity_max = 200.0
+scale_curve = SubResource("CurveTexture_ssih6")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bp8or"]
+billboard_mode = 1
+
+[sub_resource type="QuadMesh" id="QuadMesh_1rgy4"]
+material = SubResource("StandardMaterial3D_bp8or")
+
+[node name="ShipEngine" type="CollisionShape3D"]
+shape = SubResource("BoxShape3D_6box7")
+script = ExtResource("1_hsgen")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_4pbik")
+
+[node name="WeldPoint" parent="." instance=ExtResource("1_a8nnc")]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 2, 0)
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.65418, 0)
+emitting = false
+amount = 200
+lifetime = 0.2
+visibility_aabb = AABB(-1.50402, -6.46559, -1.96083, 3.00805, 12.9312, 3.92167)
+process_material = SubResource("ParticleProcessMaterial_ysl5p")
+draw_pass_1 = SubResource("QuadMesh_1rgy4")
