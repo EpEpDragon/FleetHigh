@@ -77,7 +77,7 @@ func place_component(_position):
 
 
 func remove_component(shape_id):
-	ship.remove_child(ship.shape_owner_get_owner(ship.shape_find_owner(shape_id)))
+	ship.shape_owner_get_owner(ship.shape_find_owner(shape_id)).queue_free()
 
 
 func click_query(query):

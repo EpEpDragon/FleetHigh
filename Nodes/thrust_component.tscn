@@ -31,7 +31,6 @@ script = ExtResource("1_ay04e")
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.65418, 0)
-emitting = false
 amount = 200
 lifetime = 0.2
 fixed_fps = 60
