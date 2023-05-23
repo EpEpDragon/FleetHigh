@@ -11,9 +11,8 @@ var throttle := 0.0:
 	set(value):
 		throttle = value
 		if throttle < 0.05:
-			active = false
+			particles.emitting = false
 		else:
-			active = true
 			particles.lifetime = value * value * base_lifetime
 var linear_thrust_fraction := Vector3.ZERO
 
@@ -22,17 +21,20 @@ var linear_thrust_fraction := Vector3.ZERO
 @onready var particles : GPUParticles3D = $GPUParticles3D
 @onready var base_lifetime := particles.lifetime
 
-@onready var thrust_position := buildable.position
 
 func _ready():
-	ship.engines.append(self)
-	ship.static_thrust_vector += buildable.basis * Vector3.UP * thrust
-	update_thruster_fractions()
-
+	buildable.thrust_component = self
 
 func _exit_tree():
-	ship.engines.erase(self)
-	ship.static_thrust_vector -= buildable.basis * Vector3.UP * thrust
+	if not buildable.preview:
+		ship.engines.erase(self)
+		ship.static_thrust_vector -= buildable.basis * Vector3.UP * thrust
+		update_thruster_fractions()
+
+
+func add_thruster():
+	ship.engines.append(self)
+	ship.static_thrust_vector += buildable.basis * Vector3.UP * thrust
 	update_thruster_fractions()
 
 

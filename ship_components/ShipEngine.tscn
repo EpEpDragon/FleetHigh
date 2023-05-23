@@ -1,0 +1,27 @@
+[gd_scene load_steps=7 format=3 uid="uid://nptx0ijjubxp"]
+
+[ext_resource type="Script" path="res://ship_components/buildable_component.gd" id="1_8cymu"]
+[ext_resource type="PackedScene" path="res://ship_components/WeldPoint.tscn" id="2_al8kc"]
+[ext_resource type="Material" uid="uid://bg4ppgyyqtyoc" path="res://ship_components/ShipComponentMaterial.tres" id="2_mh175"]
+[ext_resource type="PackedScene" uid="uid://l6rqhoet46h7" path="res://ship_components/thrust_component.tscn" id="3_8dlir"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_6box7"]
+size = Vector3(2, 4, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_4pbik"]
+material = ExtResource("2_mh175")
+size = Vector3(2, 4, 2)
+
+[node name="ShipEngine" type="CollisionShape3D"]
+shape = SubResource("BoxShape3D_6box7")
+script = ExtResource("1_8cymu")
+mass = 2.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_4pbik")
+
+[node name="WeldPoint" parent="." instance=ExtResource("2_al8kc")]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 2, 0)
+
+[node name="ThrustComponent" parent="." instance=ExtResource("3_8dlir")]
+thrust = 50.0

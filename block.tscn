@@ -1,14 +1,23 @@
-[gd_scene load_steps=7 format=3 uid="uid://dgrfgha2rtf6u"]
+[gd_scene load_steps=9 format=3 uid="uid://c5hefv3skmb6n"]
 
 [ext_resource type="Script" path="res://shipBuilder.gd" id="1_6uxqo"]
-[ext_resource type="PackedScene" uid="uid://cnvxrp7rxstug" path="res://Nodes/ShipComponenet.tscn" id="1_x54px"]
-[ext_resource type="PackedScene" uid="uid://4jttidsdkwjm" path="res://Nodes/OrbitCamera.tscn" id="2_8dld3"]
+[ext_resource type="PackedScene" uid="uid://cnvxrp7rxstug" path="res://ship_components/ShipComponenet.tscn" id="1_x54px"]
+[ext_resource type="PackedScene" uid="uid://4jttidsdkwjm" path="res://OrbitCamera.tscn" id="2_8dld3"]
 [ext_resource type="Script" path="res://Ship.gd" id="2_mu580"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_1po4m"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_l3iv5"]
 size = Vector2(400, 400)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6l8mk"]
+transparency = 1
+albedo_color = Color(0.796078, 0.176471, 0.717647, 0.596078)
+
+[sub_resource type="SphereMesh" id="SphereMesh_rytxg"]
+material = SubResource("StandardMaterial3D_6l8mk")
+radius = 1.0
+height = 2.0
 
 [node name="ShipBuilder" type="Node3D"]
 script = ExtResource("1_6uxqo")
@@ -42,3 +51,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 100, 10.395)
 [node name="DirectionalLight3D2" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.202024, -0.719328, 0.664646, -0.209194, 0.694671, 0.688237, -0.956778, 1.42571e-08, -0.290819, 0, 0, 0)
 light_energy = 0.1
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 70.8264, 0)
+mesh = SubResource("SphereMesh_rytxg")

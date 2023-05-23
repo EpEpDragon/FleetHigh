@@ -3,13 +3,17 @@ class_name Ship
 
 const CTRL_ACCELERATION = 5.0
 
-var ShipEngine := preload("res://Nodes/ShipEngine.gd")
+var ShipEngine := preload("res://ship_components/ShipEngine.gd")
 
 var engines : Array[ThrustComponent]
 var static_thrust_vector := Vector3.ZERO
 
 var update_physics_parameters := false
 var target_acceleration := Vector3.ZERO
+
+func _ready():
+#	pass
+	get_child(0).preview = false
 
 func _input(event):
 	if event.is_action_pressed("fly_up"):
@@ -39,12 +43,15 @@ func recalculate_physics_params():
 	var CM = Vector3.ZERO
 	var I = Vector3.ZERO
 	for c in get_children():
-		M += c.mass
+		if not c.preview:
+			M += c.mass
 	for c in get_children():
-		CM += (c.mass * c.position)/M
+		if not c.preview:
+			CM += (c.mass * c.position)/M
 	for c in get_children():
-		var origin = CM-c.position
-		I += c.inertia + c.mass * (Vector3.ONE * origin.dot(origin) - vec_sqr(origin))
+		if not c.preview:
+			var origin = CM-c.position
+			I += c.inertia + c.mass * (Vector3.ONE * origin.dot(origin) - vec_sqr(origin))
 	mass = M
 	center_of_mass = CM
 	inertia = I
