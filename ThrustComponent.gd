@@ -50,6 +50,7 @@ func add_thruster():
 
 
 func update_thruster_fractions():
+	var i = 0
 	for e in ship.engines:
 		if e.thrust_vector.x > 0:
 			e.linear_thrust_fraction.x = e.thrust_vector.x / ship.peak_directional_thrust.positive.x
@@ -70,4 +71,5 @@ func update_thruster_fractions():
 #		if is_nan(e.linear_thrust_fraction.x) : e.linear_thrust_fraction.x = 0
 #		if is_nan(e.linear_thrust_fraction.y) : e.linear_thrust_fraction.y = 0
 #		if is_nan(e.linear_thrust_fraction.z) : e.linear_thrust_fraction.z = 0
-		print(str(e) + " thrust fraction: " + str(e.linear_thrust_fraction))
+		print(str(i) + " thrust fraction: " + str(e.linear_thrust_fraction))
+		i+=1
