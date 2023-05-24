@@ -23,13 +23,14 @@ height = 2.0
 script = ExtResource("1_6uxqo")
 
 [node name="Ship" type="RigidBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 100, 0)
+transform = Transform3D(1, 0, 0, 0, 0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 100, 0)
 center_of_mass_mode = 1
 can_sleep = false
 freeze = true
 script = ExtResource("2_mu580")
 
 [node name="ShipComponent" parent="Ship" instance=ExtResource("1_x54px")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 

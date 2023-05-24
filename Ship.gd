@@ -33,12 +33,16 @@ func _integrate_forces(state):
 	
 	# TODO Clean up force calculations
 	# Apply engine thrust
-	var force = mass * (-state.total_gravity + target_acceleration) * basis # Force to apply on ship body, in ship coordinates
+	var force : Vector3 = mass * (-state.total_gravity + target_acceleration) * basis # Force to apply on ship body, in ship coordinates
 	for e in engines:
 		if e.active:
-			var force_frac = force.length() / (force.normalized().dot(e.thrust_vector)) # Maximum force fraction that this engie can contribute
-			var relative_frac = abs(force.normalized().dot(e.linear_thrust_fraction)) # Fraction that this engine should contribute relative to other engines
-			e.throttle = clamp(force_frac*relative_frac, 0, 1)
+			# Maximum force fraction that this engie can contribute
+			var force_frac = clamp(force.length() / (force.normalized().dot(e.thrust_vector)),0,INF) * e.thrust_vector.normalized()
+			
+			# Fraction that this engine should be normalized by relative to other engines
+			var scaled_normalisation_fraction = e.linear_thrust_fraction * abs(force/force[abs(force).max_axis_index()])
+			
+			e.throttle = clamp((force_frac * scaled_normalisation_fraction).length(), 0, 1)
 			print(e.throttle)
 			apply_force(basis * e.buildable.basis.y * e.thrust * e.throttle, basis * e.buildable.position)
 
