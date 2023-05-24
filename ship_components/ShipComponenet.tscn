@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://cnvxrp7rxstug"]
 
 [ext_resource type="Script" path="res://ship_components/buildable_component.gd" id="1_d7dck"]
-[ext_resource type="PackedScene" path="res://ship_components/WeldPoint.tscn" id="2_id3uj"]
+[ext_resource type="PackedScene" uid="uid://brsrym1ni44dd" path="res://ship_components/WeldPoint.tscn" id="2_id3uj"]
 [ext_resource type="Material" uid="uid://bg4ppgyyqtyoc" path="res://ship_components/ShipComponentMaterial.tres" id="2_msv6l"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_cr207"]
@@ -22,7 +22,6 @@ mesh = SubResource("BoxMesh_a7ht7")
 
 [node name="WeldPoint" parent="." instance=ExtResource("2_id3uj")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 0)
-rotation_edit_mode = 2
 
 [node name="WeldPoint2" parent="." instance=ExtResource("2_id3uj")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -2, 0, 0)

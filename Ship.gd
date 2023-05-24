@@ -1,12 +1,13 @@
 extends RigidBody3D
 class_name Ship
 
-const CTRL_ACCELERATION = 5.0
+const CTRL_ACCELERATION = 15.0
 
 var ShipEngine := preload("res://ship_components/ShipEngine.gd")
 
 var engines : Array[ThrustComponent]
-var static_thrust_vector := Vector3.ZERO
+var peak_directional_thrust := {"positive" = Vector3.ZERO,
+								"negative" = Vector3.ZERO}
 
 var update_physics_parameters := false
 var target_acceleration := Vector3.ZERO
@@ -32,9 +33,13 @@ func _integrate_forces(state):
 	
 	# TODO Clean up force calculations
 	# Apply engine thrust
+	var force = mass * (-state.total_gravity + target_acceleration) * basis # Force to apply on ship body, in ship coordinates
 	for e in engines:
 		if e.active:
-			e.throttle = clamp((mass * (-state.total_gravity + target_acceleration) * e.linear_thrust_fraction).dot(basis.y) / e.thrust, 0, 1)
+			var force_frac = force.length() / (force.normalized().dot(e.thrust_vector)) # Maximum force fraction that this engie can contribute
+			var relative_frac = abs(force.normalized().dot(e.linear_thrust_fraction)) # Fraction that this engine should contribute relative to other engines
+			e.throttle = clamp(force_frac*relative_frac, 0, 1)
+			print(e.throttle)
 			apply_force(basis * e.buildable.basis.y * e.thrust * e.throttle, basis * e.buildable.position)
 
 

@@ -12,7 +12,7 @@ var state = BUILD:
 
 var current_component_type = ShipComponent
 var component_to_build : Buildable
-#var component_hover_instance : Buildable
+var weld_normal := Vector3.ZERO
 var state_change = false
 
 var place_ray_query := PhysicsRayQueryParameters3D.new()
@@ -47,6 +47,10 @@ func _input(event):
 	elif event.is_action_pressed('selecthull'):
 		current_component_type = ShipComponent
 		preview_component(ShipComponent)
+	elif event.is_action_pressed('rotate_component_up'):
+		component_to_build.rotate(weld_normal, deg_to_rad(45))
+	elif event.is_action_pressed('rotate_component_down'):
+		component_to_build.rotate(weld_normal, deg_to_rad(-45))
 	elif event is InputEventKey and event.is_pressed() and event.keycode == KEY_R:
 		if state == BUILD:
 			state = TEST
@@ -69,10 +73,14 @@ func _physics_process(delta):
 #	if state == BUILD:
 	var result = mouse_ray_query(place_ray_query)
 	if result:
+		if result.collider.weld_normal != weld_normal:
+			weld_normal = result.collider.weld_normal
+			component_to_build.rotation = Vector3.ZERO
 		component_to_build.position = result.collider.basis * result.collider.weld_position + result.collider.buildable.position
 		component_to_build.visible = true
 	else:
 		component_to_build.visible = false
+		component_to_build.rotation = Vector3.ZERO
 	if is_remove_component:
 		result = mouse_ray_query(remove_ray_query)
 		if result:
