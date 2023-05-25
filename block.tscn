@@ -1,9 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://c5hefv3skmb6n"]
+[gd_scene load_steps=10 format=3 uid="uid://c5hefv3skmb6n"]
 
 [ext_resource type="Script" path="res://shipBuilder.gd" id="1_6uxqo"]
 [ext_resource type="PackedScene" uid="uid://cnvxrp7rxstug" path="res://ship_components/ShipComponenet.tscn" id="1_x54px"]
 [ext_resource type="PackedScene" uid="uid://4jttidsdkwjm" path="res://OrbitCamera.tscn" id="2_8dld3"]
 [ext_resource type="Script" path="res://Ship.gd" id="2_mu580"]
+[ext_resource type="Script" path="res://helpers/controller.gd" id="3_xnqf7"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_1po4m"]
 
@@ -22,15 +23,19 @@ height = 2.0
 [node name="ShipBuilder" type="Node3D"]
 script = ExtResource("1_6uxqo")
 
-[node name="Ship" type="RigidBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.853205, -0.521576, 0, 0.521576, 0.853205, 0, 100, 0)
+[node name="Ship" type="RigidBody3D" parent="." node_paths=PackedStringArray("controller")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 100, 0)
 center_of_mass_mode = 1
 can_sleep = false
 freeze = true
 script = ExtResource("2_mu580")
+controller = NodePath("Controller")
 
 [node name="ShipComponent" parent="Ship" instance=ExtResource("1_x54px")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="Controller" type="Node" parent="Ship"]
+script = ExtResource("3_xnqf7")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 

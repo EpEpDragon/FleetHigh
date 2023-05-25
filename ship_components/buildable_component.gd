@@ -17,6 +17,7 @@ var preview := true:
 				wp.collision_layer = 0xFFFF
 			if thrust_component:
 				thrust_component.add_thruster()
+			ship.components.append(self)
 			ship.update_physics_parameters = true
 			disabled = false
 
@@ -31,4 +32,5 @@ func _ready():
 
 
 func _exit_tree():
+	ship.components.erase(self)
 	ship.update_physics_parameters = true
