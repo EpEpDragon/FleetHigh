@@ -7,7 +7,6 @@ var axis := {
 				"Z" = Vector3.BACK
 			}
 
-
 # State matrix (6x1)
 # -------------------
 # x
@@ -34,6 +33,7 @@ var K : Array
 
 @onready var ship : Ship = get_parent()
 
+const NORMALIZATION_FACTOR = 0.02
 func solve_K() -> void:
 	K = Math.zero_matrix(ship.engines.size(), 6)
 	for i in range(ship.engines.size()):
@@ -41,14 +41,14 @@ func solve_K() -> void:
 		var thrust = ship.engines[i].thrust_vector
 		var torque = position.cross(thrust) * (position - ship.center_of_mass).length_squared()
 		# Linear
-		K[i][0] = thrust.dot(axis.X)
-		K[i][1] = thrust.dot(axis.Y)
-		K[i][2] = thrust.dot(axis.Z)
+		K[i][0] = thrust.dot(axis.X) * ship.mass
+		K[i][1] = thrust.dot(axis.Y) * ship.mass
+		K[i][2] = thrust.dot(axis.Z) * ship.mass
 		# Angular
-		K[i][3] = torque.dot(axis.X)
-		K[i][4] = torque.dot(axis.Y)
+		K[i][3] = torque.dot(axis.X) 
+		K[i][4] = torque.dot(axis.Y) 
 		K[i][5] = torque.dot(axis.Z)
-
+		
 
 func compute_command(R : Array) -> Array:
 	return Math.multiply(Math.subtract(R, x), K)

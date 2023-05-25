@@ -1,6 +1,12 @@
-[gd_scene load_steps=7 format=3 uid="uid://l6rqhoet46h7"]
+[gd_scene load_steps=9 format=3 uid="uid://l6rqhoet46h7"]
 
 [ext_resource type="Script" path="res://ThrustComponent.gd" id="1_ay04e"]
+
+[sub_resource type="Gradient" id="Gradient_8sb7w"]
+colors = PackedColorArray(1, 0.0234375, 0, 1, 1, 0.773438, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_b4tr4"]
+gradient = SubResource("Gradient_8sb7w")
 
 [sub_resource type="Curve" id="Curve_oj7gt"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -19,8 +25,11 @@ gravity = Vector3(0, 0, 0)
 initial_velocity_min = 150.0
 initial_velocity_max = 200.0
 scale_curve = SubResource("CurveTexture_ssih6")
+color_ramp = SubResource("GradientTexture1D_b4tr4")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bp8or"]
+shading_mode = 0
+vertex_color_use_as_albedo = true
 billboard_mode = 1
 
 [sub_resource type="QuadMesh" id="QuadMesh_i8jnp"]
@@ -31,6 +40,7 @@ script = ExtResource("1_ay04e")
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.65418, 0)
+cast_shadow = 0
 amount = 200
 lifetime = 0.2
 fixed_fps = 60

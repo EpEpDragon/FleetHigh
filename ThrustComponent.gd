@@ -1,8 +1,9 @@
 extends Node3D
 class_name ThrustComponent
 
-@export var thrust = 0.0 # kN
+@export var max_thrust = 0.0 # kN
 
+var thrust = 0.0 # kN
 var active := true:
 	set(value):
 		active = value
@@ -10,11 +11,7 @@ var active := true:
 var throttle := 0.0:
 	set(value):
 		throttle = clamp(value,0,1)
-		if throttle < 0.05:
-			particles.emitting = false
-		else:
-			particles.lifetime = throttle * throttle * base_lifetime
-			particles.emitting = true
+
 
 var linear_thrust_fraction := Vector3.ZERO
 
@@ -29,6 +26,16 @@ var linear_thrust_fraction := Vector3.ZERO
 func _ready():
 	buildable.thrust_component = self
 
+
+func _process(delta):
+	thrust += (throttle * max_thrust - thrust)*20*delta
+	if thrust / max_thrust < 0.05:
+		particles.emitting = false
+	else:
+		particles.lifetime = (thrust / max_thrust) * base_lifetime
+		particles.emitting = true
+
+
 func _exit_tree():
 	if not buildable.preview:
 		ship.engines.erase(self)
@@ -38,7 +45,7 @@ func _exit_tree():
 
 
 func add_thruster():
-	thrust_vector = buildable.basis * Vector3.UP * thrust
+	thrust_vector = buildable.basis * Vector3.UP * max_thrust
 	# Fix float errors
 	if is_zero_approx(thrust_vector.x): thrust_vector.x = 0
 	if is_zero_approx(thrust_vector.y): thrust_vector.y = 0
@@ -66,10 +73,3 @@ func update_thruster_fractions():
 			e.linear_thrust_fraction.z = e.thrust_vector.z / ship.peak_directional_thrust.positive.z
 		elif e.thrust_vector.z < 0:
 			e.linear_thrust_fraction.z = e.thrust_vector.z / ship.peak_directional_thrust.negative.z
-		
-		# TODO Make nan check not necessary
-#		if is_nan(e.linear_thrust_fraction.x) : e.linear_thrust_fraction.x = 0
-#		if is_nan(e.linear_thrust_fraction.y) : e.linear_thrust_fraction.y = 0
-#		if is_nan(e.linear_thrust_fraction.z) : e.linear_thrust_fraction.z = 0
-#		print(str(i) + " thrust fraction: " + str(e.linear_thrust_fraction))
-#		i+=1

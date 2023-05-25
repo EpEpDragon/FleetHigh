@@ -25,34 +25,34 @@ func _ready():
 
 func _input(event):
 	if event.is_action_pressed("fly_up"):
-		r[1][0] = CTRL_ACCELERATION
+		target_acceleration = Vector3.UP * CTRL_ACCELERATION
 	elif event.is_action_released("fly_up"):
-		r[1][0] = 0
+		target_acceleration = Vector3.ZERO
 	
 	if event.is_action_pressed("fly_down"):
-		r[1][0] = -CTRL_ACCELERATION
+		target_acceleration = Vector3.DOWN * CTRL_ACCELERATION
 	elif event.is_action_released("fly_down"):
-		r[1][0] = 0
+		target_acceleration = Vector3.ZERO
 	
 	if event.is_action_pressed("fly_forward"):
-		r[2][0] = -CTRL_ACCELERATION
+		target_acceleration = Vector3.FORWARD * CTRL_ACCELERATION
 	elif event.is_action_released("fly_forward"):
-		r[2][0] = 0
+		target_acceleration = Vector3.ZERO
 	
 	if event.is_action_pressed("fly_back"):
-		r[2][0] = CTRL_ACCELERATION
+		target_acceleration = Vector3.BACK * CTRL_ACCELERATION
 	elif event.is_action_released("fly_back"):
-		r[2][0] = 0
+		target_acceleration = Vector3.ZERO
 	
 	if event.is_action_pressed("fly_left"):
-		r[0][0] = -CTRL_ACCELERATION
+		target_acceleration = Vector3.LEFT * CTRL_ACCELERATION
 	elif event.is_action_released("fly_left"):
-		r[0][0] = 0
+		target_acceleration = Vector3.ZERO
 
 	if event.is_action_pressed("fly_right"):
-		r[0][0] = CTRL_ACCELERATION
+		target_acceleration = Vector3.RIGHT * CTRL_ACCELERATION
 	elif event.is_action_released("fly_right"):
-		r[0][0] = 0
+		target_acceleration = Vector3.ZERO
 
 func _integrate_forces(state):
 	if update_physics_parameters:
@@ -61,19 +61,23 @@ func _integrate_forces(state):
 	
 	# Controller
 	var x = Math.zero_matrix(6,1)
-	x[0][0] = -linear_velocity.x
-	x[1][0] = -linear_velocity.y
-	x[2][0] = -linear_velocity.z
+	var vel = linear_velocity * basis
+	x[0][0] = -vel.x
+	x[1][0] = -vel.y
+	x[2][0] = -vel.z
 	x[3][0] = -rotation.x
 	x[4][0] = -rotation.y
 	x[5][0] = -rotation.z
-	
+	var target = target_acceleration * basis
+	r[0][0] = target.x
+	r[1][0] = target.y
+	r[2][0] = target.z
 	var u = Math.multiply(controller.K, Math.add(r, x))
 	for i in range(u.size()):
-		engines[i].throttle = u[i][0] / engines[i].thrust
-		print(engines[i].throttle)
-		print("")
-		apply_force(basis * engines[i].buildable.basis.y * engines[i].throttle * engines[i].thrust, basis * engines[i].buildable.position)
+		engines[i].throttle = u[i][0] / engines[i].max_thrust
+#		print(engines[i].throttle)
+#		print("")
+		apply_force(basis * engines[i].buildable.basis.y * engines[i].thrust, basis * engines[i].buildable.position)
 
 func recalculate_physics_params():
 	var M = 0
@@ -93,12 +97,12 @@ func recalculate_physics_params():
 	center_of_mass = CM
 	inertia = I
 	controller.solve_K()
-#	print("Controller Matrix K")
-#	print("------------------")
-#	for c in controller.K:
-#		print(c)
-#	print("------------------")
-#	print("")
+	print("Controller Matrix K")
+	print("------------------")
+	for c in controller.K:
+		print(c)
+	print("------------------")
+	print("")
 
 func vec_sqr(vector:Vector3) -> Vector3:
 	return Vector3(vector.x*vector.x, vector.y*vector.y, vector.z*vector.z)
