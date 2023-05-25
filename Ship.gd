@@ -15,6 +15,7 @@ var peak_directional_thrust := {"positive" = Vector3.ZERO,
 var update_physics_parameters := false
 var target_acceleration := Vector3.ZERO
 
+var r = Math.zero_matrix(6,1)
 
 
 func _ready():
@@ -24,36 +25,41 @@ func _ready():
 
 func _input(event):
 	if event.is_action_pressed("fly_up"):
-		target_acceleration = Vector3.UP * CTRL_ACCELERATION
+		r[1][0] = CTRL_ACCELERATION
 	elif event.is_action_released("fly_up"):
-		target_acceleration = Vector3.ZERO
+		r[1][0] = 0
+	
 	if event.is_action_pressed("fly_down"):
-		target_acceleration = Vector3.DOWN * CTRL_ACCELERATION
+		r[1][0] = -CTRL_ACCELERATION
 	elif event.is_action_released("fly_down"):
-		target_acceleration = Vector3.ZERO
+		r[1][0] = 0
+	
+	if event.is_action_pressed("fly_forward"):
+		r[2][0] = -CTRL_ACCELERATION
+	elif event.is_action_released("fly_forward"):
+		r[2][0] = 0
+	
+	if event.is_action_pressed("fly_back"):
+		r[2][0] = CTRL_ACCELERATION
+	elif event.is_action_released("fly_back"):
+		r[2][0] = 0
+	
+	if event.is_action_pressed("fly_left"):
+		r[0][0] = -CTRL_ACCELERATION
+	elif event.is_action_released("fly_left"):
+		r[0][0] = 0
+
+	if event.is_action_pressed("fly_right"):
+		r[0][0] = CTRL_ACCELERATION
+	elif event.is_action_released("fly_right"):
+		r[0][0] = 0
 
 func _integrate_forces(state):
 	if update_physics_parameters:
 		recalculate_physics_params()
 		update_physics_parameters = false
 	
-	# TODO Clean up force calculations
-	# Apply engine thrust
-#	var force : Vector3 = mass * (-state.total_gravity + target_acceleration) * basis # Force to apply on ship body, in ship coordinates
-#	var total_thrust = 0
-##	var i = 0
-#	for e in engines:
-#		if e.active:
-#			e.throttle = clamp(force.normalized().dot(e.thrust_vector) / e.thrust, 0, 1)
-#			total_thrust += (e.thrust_vector.normalized()*e.throttle*e.thrust).dot(force.normalized())
-#
-#	var temp = 0
-#	if total_thrust:
-#		temp = force.length() / total_thrust
-#	for e in engines:
-#		if e.active:
-#			e.throttle = clamp(e.throttle * temp,0,1)
-#			apply_force(basis * e.buildable.basis.y * e.thrust * e.throttle, basis * e.buildable.position)
+	# Controller
 	var x = Math.zero_matrix(6,1)
 	x[0][0] = -linear_velocity.x
 	x[1][0] = -linear_velocity.y
@@ -61,11 +67,11 @@ func _integrate_forces(state):
 	x[3][0] = -rotation.x
 	x[4][0] = -rotation.y
 	x[5][0] = -rotation.z
-	var u = Math.multiply(controller.K, x)
-	print("U: " + str(u))
+	
+	var u = Math.multiply(controller.K, Math.add(r, x))
 	for i in range(u.size()):
 		engines[i].throttle = u[i][0] / engines[i].thrust
-		print("Throttle " + str(i) + ": " + str(engines[i].throttle))
+		print(engines[i].throttle)
 		print("")
 		apply_force(basis * engines[i].buildable.basis.y * engines[i].throttle * engines[i].thrust, basis * engines[i].buildable.position)
 

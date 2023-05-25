@@ -59,7 +59,7 @@ func _input(event):
 
 
 func _physics_process(delta):
-	$MeshInstance3D.position = ship.center_of_mass + ship.position
+	$MeshInstance3D.position = ship.basis * ship.center_of_mass  + ship.position
 	if state_change:
 		# States for physics frozen and unfrozen
 		if state == BUILD:

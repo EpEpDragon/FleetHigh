@@ -13,7 +13,7 @@ var throttle := 0.0:
 		if throttle < 0.05:
 			particles.emitting = false
 		else:
-			particles.lifetime = value * value * base_lifetime
+			particles.lifetime = throttle * throttle * base_lifetime
 			particles.emitting = true
 
 var linear_thrust_fraction := Vector3.ZERO

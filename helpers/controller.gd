@@ -34,7 +34,6 @@ var K : Array
 
 @onready var ship : Ship = get_parent()
 
-
 func solve_K() -> void:
 	K = Math.zero_matrix(ship.engines.size(), 6)
 	for i in range(ship.engines.size()):
