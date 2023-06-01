@@ -1,7 +1,7 @@
 extends RigidBody3D
 class_name Ship
 
-const CTRL_ACCELERATION = 15.0
+const CTRL_SPEED = 15.0
 
 @export var controller : Controller
 
@@ -25,34 +25,41 @@ func _ready():
 
 func _input(event):
 	if event.is_action_pressed("fly_up"):
-		target_acceleration = Vector3.UP * CTRL_ACCELERATION
+		target_acceleration += Vector3.UP
 	elif event.is_action_released("fly_up"):
-		target_acceleration = Vector3.ZERO
+		target_acceleration -= Vector3.UP
 	
 	if event.is_action_pressed("fly_down"):
-		target_acceleration = Vector3.DOWN * CTRL_ACCELERATION
+		target_acceleration += Vector3.DOWN
 	elif event.is_action_released("fly_down"):
-		target_acceleration = Vector3.ZERO
+		target_acceleration -= Vector3.ZERO
 	
 	if event.is_action_pressed("fly_forward"):
-		target_acceleration = Vector3.FORWARD * CTRL_ACCELERATION
+		target_acceleration += Vector3.FORWARD
 	elif event.is_action_released("fly_forward"):
-		target_acceleration = Vector3.ZERO
+		target_acceleration -= Vector3.FORWARD
 	
 	if event.is_action_pressed("fly_back"):
-		target_acceleration = Vector3.BACK * CTRL_ACCELERATION
+		target_acceleration += Vector3.BACK
 	elif event.is_action_released("fly_back"):
-		target_acceleration = Vector3.ZERO
+		target_acceleration -= Vector3.BACK
 	
 	if event.is_action_pressed("fly_left"):
-		target_acceleration = Vector3.LEFT * CTRL_ACCELERATION
+		target_acceleration += Vector3.LEFT
 	elif event.is_action_released("fly_left"):
-		target_acceleration = Vector3.ZERO
+		target_acceleration -= Vector3.LEFT
 
 	if event.is_action_pressed("fly_right"):
-		target_acceleration = Vector3.RIGHT * CTRL_ACCELERATION
+		target_acceleration += Vector3.RIGHT
 	elif event.is_action_released("fly_right"):
-		target_acceleration = Vector3.ZERO
+		target_acceleration -= Vector3.RIGHT
+	
+	if event.is_action("yaw_right"):
+		r[4][0] += deg_to_rad(-1)
+		print(rad_to_deg(r[4][0]))
+	elif event.is_action("yaw_left"):
+		r[4][0] += deg_to_rad(1)
+		print(rad_to_deg(r[4][0]))
 
 func _integrate_forces(state):
 	if update_physics_parameters:
@@ -60,19 +67,16 @@ func _integrate_forces(state):
 		update_physics_parameters = false
 	
 	# Controller
-	var x = Math.zero_matrix(6,1)
-	var vel = linear_velocity * basis
-	x[0][0] = -vel.x
-	x[1][0] = -vel.y
-	x[2][0] = -vel.z
-	x[3][0] = -rotation.x
-	x[4][0] = -rotation.y
-	x[5][0] = -rotation.z
-	var target = target_acceleration * basis
-	r[0][0] = target.x
-	r[1][0] = target.y
-	r[2][0] = target.z
-	var u = Math.multiply(controller.K, Math.add(r, x))
+
+#	var target = target_acceleration
+	r[0][0] = target_acceleration.x*CTRL_SPEED
+	r[1][0] = target_acceleration.y*CTRL_SPEED
+	r[2][0] = target_acceleration.z*CTRL_SPEED
+#	r[3][0] = 0
+#	r[4][0] = 0
+#	r[5][0] = 0
+	var u = controller.compute_command(r, linear_velocity*basis, angular_velocity*basis, rotation)
+#	print(u)
 	for i in range(u.size()):
 		engines[i].throttle = u[i][0] / engines[i].max_thrust
 #		print(engines[i].throttle)
