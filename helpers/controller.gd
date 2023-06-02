@@ -11,16 +11,16 @@ var axis := {
 				"Z" = Vector3.BACK
 			}
 
-# State matrix (6x1)
+# State matrix, in to body coordinates (6x1)
 # -------------------
-# x
-# y
-# z
-# angx
-# angy
-# angz
+# velocity x
+# velocity y
+# velocity z
+# angle x
+# angle y
+# angle z
 # -------------------
-var x : Array
+var state_matrix : Array
 
 # Control matrix (mx6)
 # -------------------
@@ -34,12 +34,15 @@ var x : Array
 #		 fxyz = Influence on xyz linear
 #		 frotxyz = Influence on xyz angular
 var K : Array
+var rotation_scale = 0.5
+var rotation_rate_scale = 1
 var linear_scale = 10
 var angular_scale = 0.03
 
 @onready var ship : Ship = get_parent()
 
-
+func _ready():
+	state_matrix = Math.zero_matrix(6,1)
 
 func solve_K() -> void:
 	K = Math.zero_matrix(ship.engines.size(),6)
@@ -66,23 +69,23 @@ func solve_K() -> void:
 var max_angle = deg_to_rad(15)
 func compute_command(target_velocity : Vector3, velocity : Vector3, angular_rate : Vector3, rotation : Vector3) -> Array:
 	# Linear Velocity & Angular Rate control
-	#-------------------------------------------------------
+	#---------------------------------------------------------------------------------------------
 	#
-	# velocity_ref -----------------------------------------> linear_velocity_control
-	#              \--> rotation_ref --> angular_rate_ref --> angular_rate_control
+	# velocity_ref -----------------------------------------> * basis --> linear_velocity_control
+	#              \--> rotation_ref --> angular_rate_ref --> * basis --> angular_rate_control
 	#
-	#-------------------------------------------------------
+	#---------------------------------------------------------------------------------------------
 	var velocity_reference = (target_velocity - velocity)
-	var rotation_reference = axis.Y.cross(velocity_reference).clamp(Vector3(-max_angle,0,-max_angle), Vector3(max_angle,0,max_angle))
-	var angular_rate_reference = (rotation_reference - rotation) * ship.basis
+	var rotation_reference = (axis.Y.cross(velocity_reference) * rotation_scale).clamp(Vector3(-max_angle,0,-max_angle), Vector3(max_angle,0,max_angle)) # Clamp for stability
+	var angular_rate_reference = (rotation_reference - rotation) * rotation_rate_scale * ship.basis # Multiply basis for body coords
+	velocity_reference *= ship.basis # To body
 	
-	velocity_reference *= ship.basis
+	# Reference matrices
 	var reference_matrix = [[velocity_reference.x], [velocity_reference.y], [velocity_reference.z], [angular_rate_reference.x], [angular_rate_reference.y], [angular_rate_reference.z]]
-	var x = Math.zero_matrix(6,1)
-	x[0][0] = velocity.x
-	x[1][0] = velocity.y
-	x[2][0] = velocity.z
-	x[3][0] = angular_rate.x
-	x[4][0] = angular_rate.y
-	x[5][0] = angular_rate.z
-	return Math.multiply(K, Math.subtract(reference_matrix, x))
+	state_matrix[0][0] = velocity.x
+	state_matrix[1][0] = velocity.y
+	state_matrix[2][0] = velocity.z
+	state_matrix[3][0] = angular_rate.x
+	state_matrix[4][0] = angular_rate.y
+	state_matrix[5][0] = angular_rate.z
+	return Math.multiply(K, Math.subtract(reference_matrix, state_matrix))
