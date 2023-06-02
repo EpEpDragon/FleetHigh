@@ -13,7 +13,7 @@ var peak_directional_thrust := {"positive" = Vector3.ZERO,
 								"negative" = Vector3.ZERO}
 
 var update_physics_parameters := false
-var target_acceleration := Vector3.ZERO
+var target_velocity := Vector3.ZERO
 
 var r = Math.zero_matrix(6,1)
 
@@ -25,34 +25,34 @@ func _ready():
 
 func _input(event):
 	if event.is_action_pressed("fly_up"):
-		target_acceleration += Vector3.UP
+		target_velocity += Vector3.UP
 	elif event.is_action_released("fly_up"):
-		target_acceleration -= Vector3.UP
+		target_velocity -= Vector3.UP
 	
 	if event.is_action_pressed("fly_down"):
-		target_acceleration += Vector3.DOWN
+		target_velocity += Vector3.DOWN
 	elif event.is_action_released("fly_down"):
-		target_acceleration -= Vector3.ZERO
+		target_velocity -= Vector3.DOWN
 	
 	if event.is_action_pressed("fly_forward"):
-		target_acceleration += Vector3.FORWARD
+		target_velocity += Vector3.FORWARD
 	elif event.is_action_released("fly_forward"):
-		target_acceleration -= Vector3.FORWARD
+		target_velocity -= Vector3.FORWARD
 	
 	if event.is_action_pressed("fly_back"):
-		target_acceleration += Vector3.BACK
+		target_velocity += Vector3.BACK
 	elif event.is_action_released("fly_back"):
-		target_acceleration -= Vector3.BACK
+		target_velocity -= Vector3.BACK
 	
 	if event.is_action_pressed("fly_left"):
-		target_acceleration += Vector3.LEFT
+		target_velocity += Vector3.LEFT
 	elif event.is_action_released("fly_left"):
-		target_acceleration -= Vector3.LEFT
+		target_velocity -= Vector3.LEFT
 
 	if event.is_action_pressed("fly_right"):
-		target_acceleration += Vector3.RIGHT
+		target_velocity += Vector3.RIGHT
 	elif event.is_action_released("fly_right"):
-		target_acceleration -= Vector3.RIGHT
+		target_velocity -= Vector3.RIGHT
 	
 	if event.is_action("yaw_right"):
 		r[4][0] += deg_to_rad(-1)
@@ -68,14 +68,14 @@ func _integrate_forces(state):
 	
 	# Controller
 
-#	var target = target_acceleration
-	r[0][0] = target_acceleration.x*CTRL_SPEED
-	r[1][0] = target_acceleration.y*CTRL_SPEED
-	r[2][0] = target_acceleration.z*CTRL_SPEED
+#	var target = target_velocity
+#	r[0][0] = target_velocity.x*CTRL_SPEED
+#	r[1][0] = target_velocity.y*CTRL_SPEED
+#	r[2][0] = target_velocity.z*CTRL_SPEED
 #	r[3][0] = 0
 #	r[4][0] = 0
 #	r[5][0] = 0
-	var u = controller.compute_command(r, linear_velocity*basis, angular_velocity*basis, rotation)
+	var u = controller.compute_command(target_velocity*CTRL_SPEED, linear_velocity, angular_velocity, rotation)
 #	print(u)
 	for i in range(u.size()):
 		engines[i].throttle = u[i][0] / engines[i].max_thrust

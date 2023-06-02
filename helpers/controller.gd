@@ -44,28 +44,11 @@ const NORMALIZATION_FACTOR = 0.02
 #	pass
 	
 func solve_K() -> void:
-#	K = [[ 27.24076289,  19.36491655,   2.81794921, -27.24076248 , 19.36491673,
-#   -2.81794938],
-# [-27.24076291,  19.36491658,   2.81794921 ,-27.24076252, -19.36491673,
-#	2.81794859],
-# [  2.81794923,  19.36491693, -27.24076284 , -2.81794949 , 19.36491663,
-#   27.24076331],
-# [  2.81794924,  19.36491695,  27.24076291   ,2.81794902, -19.36491683,
-#   27.24076338],
-# [-27.24076299,  19.36491691,  -2.8179493   ,27.24076323 , 19.36491673,
-#	2.81794825],
-# [ 27.24076274,  19.36491689,  -2.8179493  , 27.24076327 ,-19.36491673,
-#   -2.8179505 ],
-# [ -2.81794913,  19.36491653,  27.24076295,   2.81794828 , 19.36491683,
-#  -27.24076249],
-# [ -2.81794911,  19.36491651 ,-27.2407628,   -2.81795023 ,-19.36491663,
-#  -27.24076235]]
 #	B = Math.zero_matrix(6,ship.engines.size())
 	K = Math.zero_matrix(ship.engines.size(),6)
 	for i in range(ship.engines.size()):
 		var position = ship.engines[i].buildable.position
 		var thrust = ship.engines[i].thrust_vector
-	#		var torque = position.cross(thrust) * (position - ship.center_of_mass).length_squared()
 		var torque = (position - ship.center_of_mass).cross(thrust)
 		# Linear
 		K[i][0] = thrust.dot(axis.X)
@@ -82,10 +65,13 @@ func solve_K() -> void:
 	#	K = JSON.parse_string(out[0])
 		print(K)
 		
-
-func compute_command(R : Array, velocity : Vector3, angular_rate : Vector3, rotation : Vector3) -> Array:
-	var angular_rate_reference = Vector3(R[3][0]-rotation.x * K_pre, R[4][0]-rotation.x * K_pre, R[5][0]-rotation.z * K_pre) * ship.basis
-	var reference_matrix = [R[0], R[1], R[2], [angular_rate_reference.x], [angular_rate_reference.y], [angular_rate_reference.z]]
+var max_angle = deg_to_rad(15)
+func compute_command(target_velocity : Vector3, velocity : Vector3, angular_rate : Vector3, rotation : Vector3) -> Array:
+	var velocity_reference = (target_velocity - velocity)
+	var rotation_reference = axis.Y.cross(velocity_reference).clamp(Vector3(-max_angle,0,-max_angle), Vector3(max_angle,0,max_angle))
+	var angular_rate_reference = (rotation_reference - rotation) * ship.basis
+	velocity_reference *= ship.basis
+	var reference_matrix = [[velocity_reference.x], [velocity_reference.y], [velocity_reference.z], [angular_rate_reference.x], [angular_rate_reference.y], [angular_rate_reference.z]]
 #	print("REF: " + str(reference_matrix))
 	var x = Math.zero_matrix(6,1)
 	x[0][0] = velocity.x

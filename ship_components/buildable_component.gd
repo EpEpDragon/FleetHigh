@@ -11,8 +11,8 @@ var preview := true:
 	set(value):
 		preview = value
 		if not preview:
-#			material.transparency = BaseMaterial3D.TRANSPARENCY_DISABLED
-#			material.albedo_color = Color.WHITE
+			material.transparency = BaseMaterial3D.TRANSPARENCY_DISABLED
+			material.albedo_color = Color.WHITE
 			for wp in weld_points:
 				wp.collision_layer = 0xFFFF
 			if thrust_component:
@@ -23,7 +23,6 @@ var preview := true:
 
 @onready var ship : Ship = get_parent()
 @onready var material : StandardMaterial3D = $MeshInstance3D.mesh.surface_get_material(0)
-
 
 func _ready():
 	disabled = true

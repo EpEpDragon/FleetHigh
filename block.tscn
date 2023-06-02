@@ -1,7 +1,7 @@
 [gd_scene load_steps=10 format=3 uid="uid://c5hefv3skmb6n"]
 
 [ext_resource type="Script" path="res://shipBuilder.gd" id="1_6uxqo"]
-[ext_resource type="PackedScene" uid="uid://cnvxrp7rxstug" path="res://ship_components/ShipComponenet.tscn" id="1_x54px"]
+[ext_resource type="PackedScene" uid="uid://2xunl4i6kdv5" path="res://ship_components/ShipComponenet.tscn" id="1_x54px"]
 [ext_resource type="PackedScene" uid="uid://4jttidsdkwjm" path="res://OrbitCamera.tscn" id="2_8dld3"]
 [ext_resource type="Script" path="res://Ship.gd" id="2_mu580"]
 [ext_resource type="Script" path="res://helpers/controller.gd" id="3_xnqf7"]
@@ -50,8 +50,9 @@ skeleton = NodePath("../../..")
 transform = Transform3D(0.487037, -1.45148e-08, -0.873381, 0.400901, 0.888425, 0.22356, 0.775934, -0.459022, 0.432696, -10.3829, 0, 0)
 shadow_enabled = true
 
-[node name="Camera3D" parent="." instance=ExtResource("2_8dld3")]
+[node name="Camera3D" parent="." node_paths=PackedStringArray("ship") instance=ExtResource("2_8dld3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 100, 10.395)
+ship = NodePath("../Ship")
 
 [node name="DirectionalLight3D2" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.202024, -0.719328, 0.664646, -0.209194, 0.694671, 0.688237, -0.956778, 1.42571e-08, -0.290819, 0, 0, 0)
