@@ -39,7 +39,6 @@ var K_pre = 1
 
 @onready var ship : Ship = get_parent()
 
-const NORMALIZATION_FACTOR = 0.02
 #func _ready():
 #	pass
 	
@@ -51,13 +50,14 @@ func solve_K() -> void:
 		var thrust = ship.engines[i].thrust_vector
 		var torque = (position - ship.center_of_mass).cross(thrust)
 		# Linear
-		K[i][0] = thrust.dot(axis.X)
-		K[i][1] = thrust.dot(axis.Y)
-		K[i][2] = thrust.dot(axis.Z)
+		var scale_factor_linear = log(ship.mass+1)*log(ship.mass+1) * 10
+		K[i][0] = thrust.dot(axis.X) * scale_factor_linear / clamp(max(ship.peak_directional_thrust.positive.x, ship.peak_directional_thrust.negative.x),1,INF)
+		K[i][1] = thrust.dot(axis.Y) * scale_factor_linear / clamp(max(ship.peak_directional_thrust.positive.y, ship.peak_directional_thrust.negative.y),1,INF)
+		K[i][2] = thrust.dot(axis.Z) * scale_factor_linear / clamp(max(ship.peak_directional_thrust.positive.z, ship.peak_directional_thrust.negative.z),1,INF)
 		# Angular
-		K[i][3] = torque.dot(axis.X)
-		K[i][4] = torque.dot(axis.Y)
-		K[i][5] = torque.dot(axis.Z)
+		K[i][3] = torque.dot(axis.X) * log(ship.inertia.x+1) * 0.03
+		K[i][4] = torque.dot(axis.Y) * log(ship.inertia.y+1) * 0.03
+		K[i][5] = torque.dot(axis.Z) * log(ship.inertia.z+1) * 0.03
 			
 		# TODO Make this python call more efficient
 	#	var out : Array
