@@ -18,7 +18,6 @@ var separation := 20.0
 #var rotate_angle := 0.0
 
 var ray_query := PhysicsRayQueryParameters3D.new()
-@onready var space_state := get_world_3d().direct_space_state
 @onready var orbit_point_visual := $OrbitPointVisual
 
 @export var ship : Ship
@@ -51,7 +50,9 @@ func _process(delta):
 		orbit_point = ship.center_of_mass + ship.position
 		position += orbit_point - previous_orbit_point
 		previous_orbit_point = orbit_point
+
 func _physics_process(delta):
+	var space_state := get_world_3d().direct_space_state
 	orbit_point_visual.global_position = orbit_point
 	if update_orbit:
 		ray_query.from = global_position

@@ -1,8 +1,0 @@
-[gd_resource type="BoxMesh" load_steps=2 format=3 uid="uid://d25sry362g18h"]
-
-[ext_resource type="Material" uid="uid://bg4ppgyyqtyoc" path="res://ship_components/mesh/ShipComponentMaterial.tres" id="1_lj640"]
-
-[resource]
-resource_local_to_scene = true
-material = ExtResource("1_lj640")
-size = Vector3(2, 3, 2)

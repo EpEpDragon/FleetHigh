@@ -1,6 +1,6 @@
 [gd_resource type="BoxMesh" load_steps=2 format=3]
 
-[ext_resource type="Material" uid="uid://bg4ppgyyqtyoc" path="res://ship_components/mesh/ShipComponentMaterial.tres" id="1_k46a8"]
+[ext_resource type="Material" uid="uid://bg4ppgyyqtyoc" path="res://ship_components/ShipComponentMaterial.tres" id="1_k46a8"]
 
 [resource]
 resource_local_to_scene = true

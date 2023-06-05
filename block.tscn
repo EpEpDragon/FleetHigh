@@ -1,15 +1,15 @@
-[gd_scene load_steps=10 format=3 uid="uid://c5hefv3skmb6n"]
+[gd_scene load_steps=11 format=3 uid="uid://c5hefv3skmb6n"]
 
 [ext_resource type="Script" path="res://shipBuilder.gd" id="1_6uxqo"]
-[ext_resource type="PackedScene" uid="uid://2xunl4i6kdv5" path="res://ship_components/ShipComponenet.tscn" id="1_x54px"]
 [ext_resource type="PackedScene" uid="uid://4jttidsdkwjm" path="res://OrbitCamera.tscn" id="2_8dld3"]
 [ext_resource type="Script" path="res://Ship.gd" id="2_mu580"]
+[ext_resource type="PackedScene" uid="uid://domwqbspw02bi" path="res://ship_components/hull/ShipComponenet.tscn" id="3_7r85m"]
 [ext_resource type="Script" path="res://helpers/controller.gd" id="3_xnqf7"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_1po4m"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_l3iv5"]
-size = Vector2(400, 400)
+size = Vector2(4000, 4000)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6l8mk"]
 transparency = 1
@@ -20,26 +20,35 @@ material = SubResource("StandardMaterial3D_6l8mk")
 radius = 1.0
 height = 2.0
 
+[sub_resource type="BoxMesh" id="BoxMesh_5x38n"]
+size = Vector3(50, 50, 50)
+
 [node name="ShipBuilder" type="Node3D"]
 script = ExtResource("1_6uxqo")
 
 [node name="Ship" type="RigidBody3D" parent="." node_paths=PackedStringArray("controller")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 100, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 100, 9.53674e-07)
 center_of_mass_mode = 1
 can_sleep = false
 freeze = true
+angular_velocity = Vector3(0, 1.74533, 0)
 script = ExtResource("2_mu580")
 controller = NodePath("Controller")
 
-[node name="ShipComponent" parent="Ship" instance=ExtResource("1_x54px")]
+[node name="ShipComponent" parent="Ship" instance=ExtResource("3_7r85m")]
 
 [node name="Controller" type="Node" parent="Ship"]
 script = ExtResource("3_xnqf7")
+
+[node name="RayCast3D" type="RayCast3D" parent="Ship"]
+target_position = Vector3(0, 20, 0)
+debug_shape_thickness = 5
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
 shape = SubResource("WorldBoundaryShape3D_1po4m")
+disabled = true
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D/CollisionShape3D"]
 transform = Transform3D(1, 1.25177e-09, -3.19727e-09, 9.39234e-09, 1, 0, -6.66608e-09, 0, 1, 0, 0, 0)
@@ -61,3 +70,67 @@ light_energy = 0.1
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 70.8264, 0)
 mesh = SubResource("SphereMesh_rytxg")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 2.31185, 0, 2.92448, 165.881)
+mesh = SubResource("BoxMesh_5x38n")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 3.22835, 0, 0, 0, 2.31185, 0, 2.92448, -147.111)
+mesh = SubResource("BoxMesh_5x38n")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.448218, 0, 0, 0, 3.22835, 0, 0, 0, 0.484094, -179.395, 8.65037, -148.146)
+mesh = SubResource("BoxMesh_5x38n")
+
+[node name="MeshInstance3D6" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.448218, 0, 0, 0, 3.22835, 0, 0, 0, 0.484094, -449.54, 8.65037, 63.1759)
+mesh = SubResource("BoxMesh_5x38n")
+
+[node name="MeshInstance3D7" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.448218, 0, 0, 0, 3.22835, 0, 0, 0, 0.484094, -214.994, 8.65037, 383.305)
+mesh = SubResource("BoxMesh_5x38n")
+
+[node name="MeshInstance3D8" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.448218, 0, 0, 0, 3.22835, 0, 0, 0, 0.484094, 332.688, 8.65034, 323.173)
+mesh = SubResource("BoxMesh_5x38n")
+
+[node name="MeshInstance3D9" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.448218, 0, 0, 0, 3.22835, 0, 0, 0, 0.484094, 429.828, 8.65034, -150.046)
+mesh = SubResource("BoxMesh_5x38n")
+
+[node name="MeshInstance3D10" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.448218, 0, 0, 0, 3.22835, 0, 0, 0, 0.484094, 462.048, 8.65034, 77.3445)
+mesh = SubResource("BoxMesh_5x38n")
+
+[node name="MeshInstance3D11" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.448218, 0, 0, 0, 3.22835, 0, 0, 0, 0.484094, -190.056, 8.65034, 136.611)
+mesh = SubResource("BoxMesh_5x38n")
+
+[node name="MeshInstance3D12" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.448218, 0, 0, 0, 3.22835, 0, 0, 0, 0.484094, -131.33, 8.6503, 10.5428)
+mesh = SubResource("BoxMesh_5x38n")
+
+[node name="MeshInstance3D13" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.448218, 0, 0, 0, 3.22835, 0, 0, 0, 0.484094, 99.8449, 8.65034, 215.551)
+mesh = SubResource("BoxMesh_5x38n")
+
+[node name="MeshInstance3D14" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.448218, 0, 0, 0, 3.22835, 0, 0, 0, 0.484094, -75.4955, 8.65034, 288.158)
+mesh = SubResource("BoxMesh_5x38n")
+
+[node name="MeshInstance3D15" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.448218, 0, 0, 0, 3.22835, 0, 0, 0, 0.484094, 134.579, 8.65034, 47.3108)
+mesh = SubResource("BoxMesh_5x38n")
+
+[node name="MeshInstance3D16" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.448218, 0, 0, 0, 3.22835, 0, 0, 0, 0.484094, 202.579, 8.65034, -403.689)
+mesh = SubResource("BoxMesh_5x38n")
+
+[node name="MeshInstance3D17" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.448218, 0, 0, 0, 3.22835, 0, 0, 0, 0.484094, -236.9, 8.6503, -456.228)
+mesh = SubResource("BoxMesh_5x38n")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
+transform = Transform3D(3.0175, 0, 0, 0, 1, 0, 0, 0, 1, 129.574, 2.92448, 65.5781)
+mesh = SubResource("BoxMesh_5x38n")

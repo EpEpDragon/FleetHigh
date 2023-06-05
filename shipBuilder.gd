@@ -1,7 +1,7 @@
 extends Node3D
 
-const ShipComponent := preload("res://ship_components/ShipComponenet.tscn")
-const ShipEngine := preload("res://ship_components/ShipEngine.tscn")
+const ShipComponent := preload("res://ship_components/hull/ShipComponenet.tscn")
+const ShipEngine := preload("res://ship_components/engine/ShipEngine.tscn")
 
 enum {BUILD, TEST}
 
@@ -23,22 +23,19 @@ var is_remove_component := false
 
 @onready var ship := $Ship
 @onready var camera := $Camera3D
-@onready var space_state := get_world_3d().direct_space_state
-
 
 
 func _ready():
 	# Setup raycast queries for placing and removing
 	place_ray_query.collide_with_areas = true
 	place_ray_query.collide_with_bodies = false
+	place_ray_query.collision_mask = 0b10
 	preview_component(current_component_type)
 
 
 func _input(event):
 	if event.is_action_pressed('place_component'):
-		component_to_build.preview = false
-		component_to_build = null
-		preview_component(current_component_type)
+		place_component()
 	elif event.is_action_pressed('remove_component'):
 		is_remove_component = true
 	elif event.is_action_pressed('selectengine'):
@@ -57,7 +54,7 @@ func _input(event):
 		else:
 			state = BUILD
 
-
+var previous_position : Vector3
 func _physics_process(delta):
 	$MeshInstance3D.position = ship.basis * ship.center_of_mass  + ship.position
 	if state_change:
@@ -77,8 +74,15 @@ func _physics_process(delta):
 			weld_normal = result.collider.weld_normal
 			component_to_build.rotation = Vector3.ZERO
 		component_to_build.position = result.collider.basis * result.collider.weld_position + result.collider.buildable.position
+		# If component moves in space reset its blocked state
+		if not previous_position.is_equal_approx(component_to_build.position):
+			component_to_build.blocked = false
+			previous_position = component_to_build.position
+		component_to_build.check_connections()
 		component_to_build.visible = true
 	else:
+		component_to_build.position = Vector3(10000,10000,10000) # Move away
+		component_to_build.blocked = false
 		component_to_build.visible = false
 		component_to_build.rotation = Vector3.ZERO
 	if is_remove_component:
@@ -93,11 +97,15 @@ func preview_component(component):
 		component_to_build.queue_free()
 	component_to_build = component.instantiate()
 	component_to_build.visible = false
+	component_to_build.position = Vector3(10000,10000,10000) # Move away
 	ship.add_child(component_to_build)
 
 
 func place_component():
-	component_to_build.preview = false
+	if component_to_build.can_weld:
+		component_to_build.preview = false
+		component_to_build = null
+		preview_component(current_component_type)
 
 
 func remove_component(shape_id):
@@ -105,6 +113,7 @@ func remove_component(shape_id):
 
 
 func mouse_ray_query(query):
+	var space_state := get_world_3d().direct_space_state
 	query.from = camera.position
 	query.to = query.from + camera.project_ray_normal(get_viewport().get_mouse_position())*100
 	return space_state.intersect_ray(query)

@@ -1,6 +1,6 @@
-[gd_scene load_steps=9 format=3 uid="uid://l6rqhoet46h7"]
+[gd_scene load_steps=9 format=3 uid="uid://gt8ugbt2w8iy"]
 
-[ext_resource type="Script" path="res://ThrustComponent.gd" id="1_ay04e"]
+[ext_resource type="Script" path="res://ship_components/ThrustComponent.gd" id="1_p07am"]
 
 [sub_resource type="Gradient" id="Gradient_8sb7w"]
 colors = PackedColorArray(1, 0.0234375, 0, 1, 1, 0.773438, 0, 1)
@@ -36,7 +36,7 @@ billboard_mode = 1
 material = SubResource("StandardMaterial3D_bp8or")
 
 [node name="ThrustComponent" type="Node3D"]
-script = ExtResource("1_ay04e")
+script = ExtResource("1_p07am")
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.65418, 0)

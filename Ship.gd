@@ -1,11 +1,10 @@
 extends RigidBody3D
 class_name Ship
 
-const CTRL_SPEED = 15.0
+const CTRL_SPEED = 130
 
 @export var controller : Controller
 
-var ShipEngine := preload("res://ship_components/ShipEngine.gd")
 
 var components : Array[Buildable]
 var engines : Array[ThrustComponent]
@@ -67,15 +66,7 @@ func _integrate_forces(state):
 		update_physics_parameters = false
 	
 	# Controller
-
-#	var target = target_velocity
-#	r[0][0] = target_velocity.x*CTRL_SPEED
-#	r[1][0] = target_velocity.y*CTRL_SPEED
-#	r[2][0] = target_velocity.z*CTRL_SPEED
-#	r[3][0] = 0
-#	r[4][0] = 0
-#	r[5][0] = 0
-	var u = controller.compute_command(target_velocity*CTRL_SPEED, linear_velocity, angular_velocity, rotation)
+	var u = controller.compute_command(target_velocity*CTRL_SPEED)
 #	print(u)
 	for i in range(u.size()):
 		engines[i].throttle = u[i][0] / engines[i].max_thrust
