@@ -34,7 +34,7 @@ var error_matrix : Array
 #		 fxyz = Influence on xyz linear
 #		 frotxyz = Influence on xyz angular
 var K : Array
-var linear_scale = 10
+var linear_scale = 20
 var rotation_angle_scale = 0.01
 var rotation_rate_scale = 0.5
 
@@ -77,7 +77,7 @@ func compute_command(target_velocity : Vector3) -> Array:
 	#---------------------------------------------------------------------------------------------
 
 	var rotation_reference = (axis.Y.cross(target_velocity - ship.linear_velocity) * rotation_angle_scale).clamp(Vector3(-max_angle,0,-max_angle), Vector3(max_angle,0,max_angle)) # Clamp for stability
-	var angular_rate_reference = (rotation_reference - ship.rotation) # Multiply basis for body coords
+	var angular_rate_reference = (rotation_reference - ship.rotation)
 	
 	var velocity_error = (target_velocity - ship.linear_velocity).normalized()*log((target_velocity - ship.linear_velocity).length()+1)
 	var angular_velocity_error =  angular_rate_reference - ship.angular_velocity
