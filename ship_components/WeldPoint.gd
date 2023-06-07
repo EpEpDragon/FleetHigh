@@ -20,7 +20,6 @@ var connection : Buildable = null
 func _ready():
 	buildable.weld_points.append(self)
 
-
 func _on_weld_area_area_entered(area):
 	if buildable.preview:
 		if area.get_parent().connection == null:

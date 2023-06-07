@@ -36,6 +36,7 @@ script = ExtResource("2_mu580")
 controller = NodePath("Controller")
 
 [node name="ShipComponent" parent="Ship" instance=ExtResource("3_7r85m")]
+visible = false
 
 [node name="Controller" type="Node" parent="Ship"]
 script = ExtResource("3_xnqf7")
