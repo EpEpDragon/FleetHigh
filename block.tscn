@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" path="res://shipBuilder.gd" id="1_6uxqo"]
 [ext_resource type="PackedScene" uid="uid://4jttidsdkwjm" path="res://OrbitCamera.tscn" id="2_8dld3"]
+[ext_resource type="PackedScene" uid="uid://ciy3fqhmq0y3a" path="res://GUI/ShipBuilderGUI.tscn" id="2_hxyrv"]
 [ext_resource type="PackedScene" uid="uid://72bsbpa33sdo" path="res://ship_components/Ship.tscn" id="2_ql25y"]
-[ext_resource type="PackedScene" uid="uid://kmhystxfwgkv" path="res://ShipBuilderGUI.tscn" id="6_8nby0"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_1po4m"]
 
@@ -24,6 +24,8 @@ size = Vector3(50, 50, 50)
 
 [node name="ShipBuilder" type="Node3D"]
 script = ExtResource("1_6uxqo")
+
+[node name="GUI" parent="." instance=ExtResource("2_hxyrv")]
 
 [node name="Ship" parent="." instance=ExtResource("2_ql25y")]
 
@@ -119,5 +121,3 @@ mesh = SubResource("BoxMesh_5x38n")
 [node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
 transform = Transform3D(3.0175, 0, 0, 0, 1, 0, 0, 0, 1, 129.574, 2.92448, 65.5781)
 mesh = SubResource("BoxMesh_5x38n")
-
-[node name="GUI" parent="." instance=ExtResource("6_8nby0")]

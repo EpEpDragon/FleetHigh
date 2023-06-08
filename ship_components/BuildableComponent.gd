@@ -30,11 +30,13 @@ var can_weld := false
 ## True when any of the weld points are not valid for connection.
 var blocked := false
 
+
 ## True if this buildable is currently being previewed in build mode.
-@export var preview := true:
+var preview := true:
 	set(value):
 		preview = value
 		if not preview:
+			# TODO Make this not break when preview is set to false before add_child()
 			material.transparency = BaseMaterial3D.TRANSPARENCY_DISABLED
 			material.albedo_color = Color.WHITE
 			for wp in weld_points:

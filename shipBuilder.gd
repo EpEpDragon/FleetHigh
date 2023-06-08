@@ -30,7 +30,7 @@ func _ready():
 	preview_component(current_component_type)
 
 
-func _input(event):
+func _unhandled_input(event):
 	if event.is_action_pressed('place_component'):
 		place_component()
 	elif event.is_action_pressed('remove_component'):

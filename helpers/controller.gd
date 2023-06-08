@@ -62,8 +62,6 @@ func solve_K() -> void:
 		K[i][3] = torque.dot(axis.X) * log(ship.inertia.x+1) * rotation_rate_scale
 		K[i][4] = torque.dot(axis.Y) * log(ship.inertia.y+1) * rotation_rate_scale
 		K[i][5] = torque.dot(axis.Z) * log(ship.inertia.z+1) * rotation_rate_scale
-		
-		print(K)
 
 var max_angle = deg_to_rad(60)
 var max_ref = 15
@@ -91,5 +89,4 @@ func compute_command(target_velocity : Vector3) -> Array:
 	error_matrix[3][0] = angular_velocity_error.x
 	error_matrix[4][0] = angular_velocity_error.y
 	error_matrix[5][0] = angular_velocity_error.z
-	print(rotation_reference)
 	return Math.multiply(K, error_matrix)

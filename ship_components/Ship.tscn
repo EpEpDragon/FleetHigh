@@ -9,7 +9,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 100, 9.53674e-07)
 center_of_mass_mode = 1
 can_sleep = false
 freeze = true
-angular_velocity = Vector3(0, 1.74533, 0)
 script = ExtResource("1_n0a3c")
 controller = NodePath("Controller")
 

@@ -33,6 +33,5 @@ func _on_weld_area_area_exited(area):
 	var to = area.get_parent().connection
 	if buildable.preview:
 		if to == buildable:
-			print("pass")
 			connection = null
 			area.get_parent().connection = null

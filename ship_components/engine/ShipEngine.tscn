@@ -13,7 +13,7 @@ size = Vector3(2, 4, 2)
 shape = SubResource("BoxShape3D_6box7")
 script = ExtResource("1_ffkj4")
 type = 1
-mass = 2.0
+mass = 1.0
 inertia = Vector3(10, 5, 10)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
