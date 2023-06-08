@@ -36,7 +36,6 @@ script = ExtResource("2_mu580")
 controller = NodePath("Controller")
 
 [node name="ShipComponent" parent="Ship" instance=ExtResource("3_7r85m")]
-visible = false
 
 [node name="Controller" type="Node" parent="Ship"]
 script = ExtResource("3_xnqf7")
@@ -59,6 +58,7 @@ skeleton = NodePath("../../..")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.487037, -1.45148e-08, -0.873381, 0.400901, 0.888425, 0.22356, 0.775934, -0.459022, 0.432696, -10.3829, 0, 0)
 shadow_enabled = true
+directional_shadow_max_distance = 1000.0
 
 [node name="Camera3D" parent="." node_paths=PackedStringArray("ship") instance=ExtResource("2_8dld3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 100, 10.395)
@@ -66,6 +66,7 @@ ship = NodePath("../Ship")
 
 [node name="DirectionalLight3D2" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.202024, -0.719328, 0.664646, -0.209194, 0.694671, 0.688237, -0.956778, 1.42571e-08, -0.290819, 0, 0, 0)
+visible = false
 light_energy = 0.1
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]

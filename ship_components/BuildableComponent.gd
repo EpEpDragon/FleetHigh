@@ -3,6 +3,15 @@ extends CollisionShape3D
 ## Base class for anything that can be placed on a ship.
 class_name Buildable
 
+## Used for component saving/loading
+var component_data : ComponentData
+
+## Possible buildable types
+enum Type {HULL, THRUSTER}
+
+## Type of the buildable
+@export var type := Type.HULL
+
 ## Mass of the buildable.
 @export var mass := 0.0 # tonne
 
@@ -34,6 +43,14 @@ var preview := true:
 			if thrust_component:
 				thrust_component.add_thruster()
 			ship.components.append(self)
+			
+			# Create component data if it does not exist (i.e not being loaded from save)
+			if not component_data:
+				component_data = ComponentData.new()
+				component_data.type = type
+				component_data.position = position
+				ship.ship_data.components.append(component_data)
+			
 			ship.update_physics_parameters = true
 			disabled = false
 

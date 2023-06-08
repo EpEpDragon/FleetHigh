@@ -1,9 +1,14 @@
 extends RigidBody3D
 class_name Ship
+var ship_data : ShipData
 
 const CTRL_SPEED = 130
 
 @export var controller : Controller
+
+var save_file_path = "user://save/"
+var save_file_name = "ShipData.tres"
+
 
 
 var components : Array[Buildable]
@@ -14,12 +19,16 @@ var peak_directional_thrust := {"positive" = Vector3.ZERO,
 var update_physics_parameters := false
 var target_velocity := Vector3.ZERO
 
-var r = Math.zero_matrix(6,1)
-
 
 func _ready():
-#	pass
-	print(Math.zero_matrix(6,4)[0][2])
+	DirAccess.make_dir_absolute(save_file_path)
+	
+	if FileAccess.file_exists(save_file_path + save_file_name):
+		ship_data = ResourceLoader.load(save_file_path + save_file_name).duplicate(true)
+		ship_data.init_ship(self)
+	else:
+		ship_data = ShipData.new()
+	
 	get_child(0).preview = false
 
 func _input(event):
@@ -53,12 +62,12 @@ func _input(event):
 	elif event.is_action_released("fly_right"):
 		target_velocity -= Vector3.RIGHT
 	
-	if event.is_action("yaw_right"):
-		r[4][0] += deg_to_rad(-1)
-		print(rad_to_deg(r[4][0]))
-	elif event.is_action("yaw_left"):
-		r[4][0] += deg_to_rad(1)
-		print(rad_to_deg(r[4][0]))
+#	if event.is_action("yaw_right"):
+#		r[4][0] += deg_to_rad(-1)
+#		print(rad_to_deg(r[4][0]))
+#	elif event.is_action("yaw_left"):
+#		r[4][0] += deg_to_rad(1)
+#		print(rad_to_deg(r[4][0]))
 
 func _integrate_forces(state):
 	if update_physics_parameters:

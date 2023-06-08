@@ -1,8 +1,5 @@
 extends Node3D
 
-const ShipComponent := preload("res://ship_components/hull/ShipComponenet.tscn")
-const ShipEngine := preload("res://ship_components/engine/ShipEngine.tscn")
-
 enum {BUILD, TEST}
 
 var state = BUILD: 
@@ -10,7 +7,7 @@ var state = BUILD:
 		state = value
 		state_change = true
 
-var current_component_type = ShipComponent
+var current_component_type = ComponentDefs.Hull
 var component_to_build : Buildable
 var weld_normal := Vector3.ZERO
 var state_change = false
@@ -39,17 +36,18 @@ func _input(event):
 	elif event.is_action_pressed('remove_component'):
 		is_remove_component = true
 	elif event.is_action_pressed('selectengine'):
-		current_component_type = ShipEngine
-		preview_component(ShipEngine)
+		current_component_type = ComponentDefs.Thruster
+		preview_component(current_component_type)
 	elif event.is_action_pressed('selecthull'):
-		current_component_type = ShipComponent
-		preview_component(ShipComponent)
+		current_component_type = ComponentDefs.Hull
+		preview_component(current_component_type)
 	elif event.is_action_pressed('rotate_component_up'):
 		component_to_build.rotate(weld_normal, deg_to_rad(45))
 	elif event.is_action_pressed('rotate_component_down'):
 		component_to_build.rotate(weld_normal, deg_to_rad(-45))
 	elif event is InputEventKey and event.is_pressed() and event.keycode == KEY_R:
 		if state == BUILD:
+			ResourceSaver.save(ship.ship_data, ship.save_file_path + ship.save_file_name)
 			state = TEST
 		else:
 			state = BUILD

@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://domwqbspw02bi"]
 
-[ext_resource type="Script" path="res://ship_components/BuildableComponent.gd" id="1_wu4kn"]
+[ext_resource type="Script" path="res://ship_components/BuildableComponent.gd" id="1_7126l"]
 [ext_resource type="BoxMesh" path="res://ship_components/hull/ship_component_mesh.tres" id="2_qfwce"]
 [ext_resource type="PackedScene" uid="uid://brsrym1ni44dd" path="res://ship_components/WeldPoint.tscn" id="3_1e66m"]
 
@@ -9,9 +9,9 @@ size = Vector3(4, 4, 4)
 
 [node name="ShipComponent" type="CollisionShape3D"]
 shape = SubResource("BoxShape3D_cr207")
-script = ExtResource("1_wu4kn")
+script = ExtResource("1_7126l")
 mass = 4.0
-inertia = Vector3(10.67, 10.67, 10.67)
+inertia = Vector3(10, 10, 10)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = ExtResource("2_qfwce")

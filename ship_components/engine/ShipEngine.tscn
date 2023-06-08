@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://d31dvtq5ft4v8"]
 
-[ext_resource type="Script" path="res://ship_components/BuildableComponent.gd" id="1_nlqb0"]
+[ext_resource type="Script" path="res://ship_components/BuildableComponent.gd" id="1_ffkj4"]
 [ext_resource type="BoxMesh" path="res://ship_components/engine/ShipEngineMeshUpper.tres" id="2_dudmr"]
 [ext_resource type="BoxMesh" path="res://ship_components/engine/ShipEngineMeshLower.tres" id="3_17xb0"]
 [ext_resource type="PackedScene" uid="uid://brsrym1ni44dd" path="res://ship_components/WeldPoint.tscn" id="4_0tehn"]
@@ -11,8 +11,10 @@ size = Vector3(2, 4, 2)
 
 [node name="ShipEngine" type="CollisionShape3D"]
 shape = SubResource("BoxShape3D_6box7")
-script = ExtResource("1_nlqb0")
+script = ExtResource("1_ffkj4")
+type = 1
 mass = 2.0
+inertia = Vector3(10, 5, 10)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.500061, 0)
