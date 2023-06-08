@@ -6,6 +6,7 @@ class_name ComponentData
 @export var health := 0
 @export var connections := []
 @export var position := Vector3.ZERO
+@export var rotation := Vector3.ZERO
 
 ## Initialises and adds component to ship
 #func init_component(ship : Ship):

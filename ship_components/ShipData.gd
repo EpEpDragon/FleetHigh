@@ -21,6 +21,7 @@ func init_ship(ship : Ship):
 		ship.add_child(component_instance)
 		component_instance.component_data = c
 		component_instance.position = c.position
+		component_instance.rotation = c.rotation
 		component_instance.preview = false
 	# Then connect required components
 	for i in components.size():

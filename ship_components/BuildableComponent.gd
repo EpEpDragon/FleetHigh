@@ -31,7 +31,7 @@ var can_weld := false
 var blocked := false
 
 ## True if this buildable is currently being previewed in build mode.
-var preview := true:
+@export var preview := true:
 	set(value):
 		preview = value
 		if not preview:
@@ -49,6 +49,7 @@ var preview := true:
 				component_data = ComponentData.new()
 				component_data.type = type
 				component_data.position = position
+				component_data.rotation = rotation
 				ship.ship_data.components.append(component_data)
 			
 			ship.update_physics_parameters = true
@@ -69,6 +70,7 @@ func _ready():
 
 func _exit_tree():
 	ship.components.erase(self)
+	ship.ship_data.components.erase(component_data)
 	ship.update_physics_parameters = true
 
 

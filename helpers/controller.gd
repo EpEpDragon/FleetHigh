@@ -83,8 +83,8 @@ func compute_command(target_velocity : Vector3) -> Array:
 	var angular_velocity_error =  angular_rate_reference - ship.angular_velocity
 	velocity_error *= ship.basis
 	angular_velocity_error *= ship.basis
-	ship.get_child(2).target_position = ship.linear_velocity*ship.basis
-	ship.get_child(2).position = ship.center_of_mass
+	ship.get_child(1).target_position = ship.linear_velocity*ship.basis
+	ship.get_child(1).position = ship.center_of_mass
 	error_matrix[0][0] = velocity_error.x
 	error_matrix[1][0] = velocity_error.y
 	error_matrix[2][0] = velocity_error.z

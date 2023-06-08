@@ -6,11 +6,6 @@ const CTRL_SPEED = 130
 
 @export var controller : Controller
 
-var save_file_path = "user://save/"
-var save_file_name = "ShipData.tres"
-
-
-
 var components : Array[Buildable]
 var engines : Array[ThrustComponent]
 var peak_directional_thrust := {"positive" = Vector3.ZERO,
@@ -19,17 +14,10 @@ var peak_directional_thrust := {"positive" = Vector3.ZERO,
 var update_physics_parameters := false
 var target_velocity := Vector3.ZERO
 
-
 func _ready():
-	DirAccess.make_dir_absolute(save_file_path)
-	
-	if FileAccess.file_exists(save_file_path + save_file_name):
-		ship_data = ResourceLoader.load(save_file_path + save_file_name).duplicate(true)
-		ship_data.init_ship(self)
-	else:
+	if not ship_data:
 		ship_data = ShipData.new()
-	
-	get_child(0).preview = false
+	get_child(2).preview = false
 
 func _input(event):
 	if event.is_action_pressed("fly_up"):
