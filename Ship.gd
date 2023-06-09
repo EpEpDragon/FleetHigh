@@ -1,13 +1,19 @@
 extends RigidBody3D
 class_name Ship
+
+signal ship_cleared
+
 var ship_data : ShipData
 
 const CTRL_SPEED = 130
 
 @export var controller : Controller
 
-var components : Array[Buildable]
+# TODO Component and engine array to use dictionary
+var components : Dictionary
 var engines : Array[ThrustComponent]
+var next_key : int = 0
+
 var peak_directional_thrust := {"positive" = Vector3.ZERO,
 								"negative" = Vector3.ZERO}
 
@@ -71,20 +77,21 @@ func _integrate_forces(state):
 #		print("")
 		apply_force(basis * engines[i].buildable.basis.y * engines[i].thrust, basis * engines[i].buildable.position)
 
+
 func recalculate_physics_params():
 	var M = 0
 	var CM = Vector3.ZERO
 	var I = Vector3.ZERO
 	for c in components:
-		if not c.preview:
-			M += c.mass
+		if not components[c].preview:
+			M += components[c].mass
 	for c in components:
-		if not c.preview:
-			CM += (c.mass * c.position)/M
+		if not components[c].preview:
+			CM += (components[c].mass * components[c].position)/M
 	for c in components:
-		if not c.preview:
-			var origin = CM-c.position
-			I += c.inertia + c.mass * (Vector3.ONE * origin.dot(origin) - vec_sqr(origin))
+		if not components[c].preview:
+			var origin = CM-components[c].position
+			I += components[c].inertia + components[c].mass * (Vector3.ONE * origin.dot(origin) - vec_sqr(origin))
 	mass = M
 	center_of_mass = CM
 	inertia = I

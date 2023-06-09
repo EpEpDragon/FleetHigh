@@ -4,9 +4,10 @@ class_name ComponentData
 
 @export var type := 0
 @export var health := 0
-@export var connections := []
 @export var position := Vector3.ZERO
 @export var rotation := Vector3.ZERO
+@export var welds_data : Array[int]
+@export var key : int
 
 ## Initialises and adds component to ship
 #func init_component(ship : Ship):
@@ -17,6 +18,7 @@ class_name ComponentData
 #	component_instance.preview = false
 
 ## Set up component connections
-func connect_component(ship_ref : Ship, buildable_id : int):
-	for i in range(connections.size()):
-		ship_ref.components[buildable_id].weld_points[i].connection = ship_ref.components[connections[i]]
+func connect_component(ship_ref : Ship, my_key : int):
+	for i in welds_data.size():
+		if welds_data[i] != -1:
+			ship_ref.components[my_key].weld_points[i].connection = ship_ref.components[welds_data[i]]

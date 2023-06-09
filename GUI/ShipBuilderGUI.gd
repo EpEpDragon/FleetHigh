@@ -39,8 +39,15 @@ func save_ship():
 func load_ship(name):
 	DirAccess.make_dir_absolute(save_file_path)
 	if FileAccess.file_exists(save_file_path + name):
+		builder.ship.next_key = 0
 		for c in builder.ship.components:
-			c.queue_free()
+			builder.ship.components[c].queue_free()
+		for e in builder.ship.engines:
+			e.queue_free()
+		
+		while !builder.ship.components.is_empty() || !builder.ship.engines.is_empty():
+			await get_tree().process_frame
+		
 		builder.ship.ship_data = ResourceLoader.load(save_file_path + name).duplicate(true)
 		# TODO Make this ship_instance referencing better
 		builder.ship.ship_data.init_ship(builder.ship)
@@ -55,7 +62,7 @@ func new_ship():
 	# TODO Figure out how to make ship ref not null when called on_ready
 	if builder.ship:
 		for c in builder.ship.components:
-			c.queue_free()
+			builder.ship.components[c].queue_free()
 		var root_block = ComponentDefs.Hull.instantiate()
 		builder.ship.add_child(root_block)
 		root_block.preview = false

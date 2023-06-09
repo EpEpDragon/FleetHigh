@@ -104,6 +104,7 @@ func place_component():
 	if component_to_build.can_weld:
 		component_to_build.preview = false
 		component_to_build = null
+		# Preview next component
 		preview_component(current_component_type)
 
 

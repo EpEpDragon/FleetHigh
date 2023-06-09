@@ -1,7 +1,12 @@
 extends CollisionShape3D
-
 ## Base class for anything that can be placed on a ship.
 class_name Buildable
+
+## Hash key to this component
+var key : int
+
+## Flag to indicate that this componen tis being loaded from a save
+var loading := true
 
 ## Used for component saving/loading
 var component_data : ComponentData
@@ -44,18 +49,31 @@ var preview := true:
 				wp.weld_area.monitoring = false
 			if thrust_component:
 				thrust_component.add_thruster()
-			ship.components.append(self)
+			
+			if loading:
+				key = component_data.key
+				ship.next_key = max(key + 1, ship.next_key)
+			else:
+				key = ship.next_key
+				ship.next_key += 1
+				component_data.key = key
+			ship.components[key] = self
 			
 			# Create component data if it does not exist (i.e not being loaded from save)
-			if not component_data:
-				component_data = ComponentData.new()
-				component_data.type = type
-				component_data.position = position
-				component_data.rotation = rotation
-				ship.ship_data.components.append(component_data)
+
+			component_data.position = position
+			component_data.rotation = rotation
+#				for wp in weld_points:
+#					component_data.welds_data.append(wp.weld_data)
+#					component_data.welds_data.append(wp.connection_idx)
+			ship.ship_data.components[key] = component_data
 			
 			ship.update_physics_parameters = true
 			disabled = false
+			print("--------")
+			for c in ship.components:
+				print(str(ship.components[c].key)+ ": "+ str(ship.components[c].component_data.welds_data))
+			print("--------")
 
 ## Contains reference to the parent ship of this buildable.
 @onready var ship : Ship = get_parent()
@@ -68,12 +86,34 @@ func _ready():
 	disabled = true
 	for wp in weld_points:
 		wp.collision_layer = 0b0
+	
+	# Initialise component data if none exists (not loading ship)
+	if not component_data:
+		loading = false
+		component_data = ComponentData.new()
+		component_data.type = type
+		component_data.welds_data.resize(weld_points.size())
+		component_data.welds_data.fill(-1)
 
 
 func _exit_tree():
-	ship.components.erase(self)
-	ship.ship_data.components.erase(component_data)
-	ship.update_physics_parameters = true
+	if !preview:
+		for connected_key in component_data.welds_data:
+			if connected_key != -1:
+				for i in ship.components[connected_key].component_data.welds_data.size():
+					if ship.components[connected_key].component_data.welds_data[i] == key:
+						ship.components[connected_key].component_data.welds_data[i] = -1
+		ship.components.erase(key)
+		ship.ship_data.components.erase(key)
+		ship.update_physics_parameters = true
+		print("--------")
+		for c in ship.components:
+			print(str(ship.components[c].key)+ ": "+ str(ship.components[c].component_data.welds_data))
+		print("--------")
+		
+		# Used for save loading of new ship
+#		if ship.components.is_empty():
+#			ship.ship_cleared
 
 
 ## Checks if this buildable can be placed, used while previewing in build mode.
