@@ -27,7 +27,9 @@ script = ExtResource("1_6uxqo")
 
 [node name="GUI" parent="." instance=ExtResource("2_hxyrv")]
 
-[node name="Ship" parent="." instance=ExtResource("2_ql25y")]
+[node name="Ship" parent="." node_paths=PackedStringArray("camera") instance=ExtResource("2_ql25y")]
+speed = 600
+camera = NodePath("../Camera3D")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 
@@ -47,6 +49,7 @@ directional_shadow_max_distance = 1000.0
 
 [node name="Camera3D" parent="." node_paths=PackedStringArray("ship") instance=ExtResource("2_8dld3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 100, 10.395)
+rotation_edit_mode = 0
 ship = NodePath("../Ship")
 
 [node name="DirectionalLight3D2" type="DirectionalLight3D" parent="."]

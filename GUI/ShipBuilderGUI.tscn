@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://ciy3fqhmq0y3a"]
+[gd_scene load_steps=4 format=3 uid="uid://ciy3fqhmq0y3a"]
 
 [ext_resource type="Script" path="res://GUI/ShipBuilderGUI.gd" id="1_r7hn4"]
 [ext_resource type="Script" path="res://GUI/NameEdit.gd" id="2_roqdu"]
+[ext_resource type="Script" path="res://GUI/FPSCount.gd" id="3_oio2q"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -80,6 +81,16 @@ vertical_scroll_mode = 2
 [node name="SaveList" type="VBoxContainer" parent="MarginContainer/VBoxContainer2/PanelContainer/SaveListScroll"]
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 1795.0
+offset_top = 20.0
+offset_right = 1881.0
+offset_bottom = 74.0
+text = "FPS: 100 PFPS: 200"
+autowrap_mode = 3
+script = ExtResource("3_oio2q")
 
 [connection signal="pressed" from="MarginContainer/VBoxContainer2/HBoxContainer/NewSaveLoadButtons/New" to="." method="_on_new_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer2/HBoxContainer/NewSaveLoadButtons/Save" to="." method="_on_save_pressed"]

@@ -24,7 +24,7 @@ func _ready():
 #	weld_data = WeldData.new()
 	index = buildable.weld_points.size()
 	buildable.weld_points.append(self)
-	
+
 # Set up connection
 func _on_weld_area_area_entered(area):
 	if buildable.preview:

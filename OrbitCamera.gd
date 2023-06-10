@@ -12,7 +12,7 @@ var state := REST :
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 var orbit_point : Vector3 # Global space
 var update_orbit := false
-var separation := 20.0
+var separation := 40.0
 
 #var rotate_arm := Vector3.ZERO
 #var rotate_angle := 0.0

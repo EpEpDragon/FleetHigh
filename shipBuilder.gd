@@ -5,6 +5,13 @@ enum {BUILD, TEST}
 var state = BUILD: 
 	set(value):
 		state = value
+		if state == BUILD:
+			await get_tree().physics_frame
+			ship.freeze = true
+			ship.position = Vector3(0,100,0)
+			ship.rotation = Vector3.ZERO
+		else:
+			ship.freeze = false
 		state_change = true
 
 var current_component_type = ComponentDefs.Hull
@@ -55,14 +62,6 @@ var previous_position : Vector3
 func _physics_process(delta):
 	if ship:
 		$MeshInstance3D.position = ship.basis * ship.center_of_mass  + ship.position
-		if state_change:
-			# States for physics frozen and unfrozen
-			if state == BUILD:
-				ship.freeze = true
-				ship.position = Vector3(0,100,0)
-				ship.rotation = Vector3.ZERO
-			elif state == TEST:
-				ship.freeze = false
 		
 		# Place/Remove component
 	#	if state == BUILD:

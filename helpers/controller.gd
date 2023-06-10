@@ -63,9 +63,9 @@ func solve_K() -> void:
 		K[i][4] = torque.dot(axis.Y) * log(ship.inertia.y+1) * rotation_rate_scale
 		K[i][5] = torque.dot(axis.Z) * log(ship.inertia.z+1) * rotation_rate_scale
 
-var max_angle = deg_to_rad(60)
+var max_angle = deg_to_rad(45)
 var max_ref = 15
-func compute_command(target_velocity : Vector3) -> Array:
+func compute_command(target_velocity : Vector3, yaw : float) -> Array:
 	# Linear Velocity & Angular Rate control
 	#---------------------------------------------------------------------------------------------
 	#
@@ -75,6 +75,7 @@ func compute_command(target_velocity : Vector3) -> Array:
 	#---------------------------------------------------------------------------------------------
 
 	var rotation_reference = (axis.Y.cross(target_velocity - ship.linear_velocity) * rotation_angle_scale).clamp(Vector3(-max_angle,0,-max_angle), Vector3(max_angle,0,max_angle)) # Clamp for stability
+	rotation_reference.y = yaw
 	var angular_rate_reference = (rotation_reference - ship.rotation)
 	
 	var velocity_error = (target_velocity - ship.linear_velocity).normalized()*log((target_velocity - ship.linear_velocity).length()+1)

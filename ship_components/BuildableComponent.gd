@@ -35,15 +35,15 @@ var can_weld := false
 ## True when any of the weld points are not valid for connection.
 var blocked := false
 
-
+# TODO Make this logic in a signal or something
 ## True if this buildable is currently being previewed in build mode.
 var preview := true:
 	set(value):
 		preview = value
 		if not preview:
 			# TODO Make this not break when preview is set to false before add_child()
-			material.transparency = BaseMaterial3D.TRANSPARENCY_DISABLED
-			material.albedo_color = Color.WHITE
+#			material.transparency = BaseMaterial3D.TRANSPARENCY_DISABLED
+			material.albedo_color = Color(1,1,1,0.5)
 			for wp in weld_points:
 				wp.collision_layer = 0b10
 				wp.weld_area.monitoring = false
@@ -70,10 +70,14 @@ var preview := true:
 			
 			ship.update_physics_parameters = true
 			disabled = false
-			print("--------")
-			for c in ship.components:
-				print(str(ship.components[c].key)+ ": "+ str(ship.components[c].component_data.welds_data))
-			print("--------")
+#			print("--------")
+#			for c in ship.components:
+#				print(str(ship.components[c].key)+ ": "+ str(ship.components[c].component_data.welds_data))
+#			print("--------")
+			
+			# Physics parameters
+			add_mass()
+
 
 ## Contains reference to the parent ship of this buildable.
 @onready var ship : Ship = get_parent()
@@ -81,6 +85,36 @@ var preview := true:
 ## Contains reference to the material used in this buildable.
 @onready var material : StandardMaterial3D = $MeshInstance3D.mesh.surface_get_material(0)
 
+func add_mass():
+	ship.M += mass
+	var relative = position - ship.center_of_mass
+	var CM_change = (mass * (relative))/ship.mass
+	
+	ship.center_of_mass += CM_change
+	
+	ship.inertia = ship.inertia + (ship.mass-mass) * (Vector3.ONE * CM_change.length_squared() - vec_sqr(CM_change))
+	relative = position - ship.center_of_mass
+	ship.inertia += inertia + mass * (Vector3.ONE * relative.length_squared() - vec_sqr(relative))
+
+func remove_mass():
+	ship.M -= mass
+	var relative = position - ship.center_of_mass
+	var CM_change = -(mass * (relative))/ship.mass
+	
+	ship.center_of_mass += CM_change
+	
+	ship.inertia = ship.inertia + (ship.mass+mass) * (Vector3.ONE * CM_change.length_squared() - vec_sqr(CM_change))
+	relative = position - ship.center_of_mass
+	var diff = inertia + mass * (Vector3.ONE * relative.length_squared() - vec_sqr(relative))
+	
+	# Check for floating point errors that make inertia < 0
+	if diff.x > ship.inertia.x || diff.y > ship.inertia.y || diff.z > ship.inertia.z:
+		ship.inertia = Vector3.ZERO
+	else:
+		ship.inertia -= diff
+
+func vec_sqr(vector:Vector3) -> Vector3:
+	return Vector3(vector.x*vector.x, vector.y*vector.y, vector.z*vector.z)
 
 func _ready():
 	disabled = true
@@ -106,10 +140,12 @@ func _exit_tree():
 		ship.components.erase(key)
 		ship.ship_data.components.erase(key)
 		ship.update_physics_parameters = true
-		print("--------")
-		for c in ship.components:
-			print(str(ship.components[c].key)+ ": "+ str(ship.components[c].component_data.welds_data))
-		print("--------")
+#		print("--------")
+#		for c in ship.components:
+#			print(str(ship.components[c].key)+ ": "+ str(ship.components[c].component_data.welds_data))
+#		print("--------")
+
+		remove_mass()
 		
 		# Used for save loading of new ship
 #		if ship.components.is_empty():

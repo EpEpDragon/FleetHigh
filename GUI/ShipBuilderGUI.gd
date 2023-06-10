@@ -14,7 +14,6 @@ var selected_save_name : String
 
 
 func _ready():
-	new_ship()
 	populate_save_list()
 
 
@@ -45,6 +44,7 @@ func load_ship(name):
 		for e in builder.ship.engines:
 			e.queue_free()
 		
+		# Wait for queue free
 		while !builder.ship.components.is_empty() || !builder.ship.engines.is_empty():
 			await get_tree().process_frame
 		
@@ -63,6 +63,11 @@ func new_ship():
 	if builder.ship:
 		for c in builder.ship.components:
 			builder.ship.components[c].queue_free()
+		
+		# Wait for queue free
+		while !builder.ship.components.is_empty():
+			await get_tree().process_frame
+		
 		var root_block = ComponentDefs.Hull.instantiate()
 		builder.ship.add_child(root_block)
 		root_block.preview = false

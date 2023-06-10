@@ -10,8 +10,8 @@ size = Vector3(4, 4, 4)
 [node name="ShipComponent" type="CollisionShape3D"]
 shape = SubResource("BoxShape3D_cr207")
 script = ExtResource("1_7126l")
-mass = 4.0
-inertia = Vector3(10, 10, 10)
+mass = 2.0
+inertia = Vector3(5.333, 5.333, 5.333)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = ExtResource("2_qfwce")
