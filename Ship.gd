@@ -6,12 +6,18 @@ signal ship_cleared
 @export var speed = 300
 @export var controller : Controller
 @export var camera : Camera3D
+
 var aim_direction
 
 var ship_data : ShipData
 var components : Dictionary
 var engines : Array[ThrustComponent]
 var next_key : int = 0
+var engines_on := true:
+	set(value):
+		engines_on = value
+		for e in engines:
+			e.throttle = 0
 
 var M = 0:
 	set(value):
@@ -24,7 +30,7 @@ var M = 0:
 var peak_directional_thrust := {"positive" = Vector3.ZERO,
 								"negative" = Vector3.ZERO}
 
-var update_physics_parameters := false#:
+var update_physics_parameters := false
 
 var target_velocity := Vector3.ZERO
 
@@ -67,6 +73,9 @@ func _unhandled_key_input(event):
 		target_velocity += Vector3.RIGHT
 	elif event.is_action_released("fly_right"):
 		target_velocity -= Vector3.RIGHT
+	
+	if event.is_action_pressed("toggle_engines_on"):
+		engines_on = !engines_on
 
 
 func _integrate_forces(state):
@@ -81,14 +90,15 @@ func _integrate_forces(state):
 		update_physics_parameters = false
 	
 	# Controller
-	var ang = acos(Vector2(camera.basis.z.x, camera.basis.z.z).normalized().dot(Vector2.DOWN))
-	if camera.basis.z.x < 0:
-		ang = -ang
-	var u = controller.compute_command(target_velocity.rotated(Vector3.UP, ang) * speed, ang)
-	for i in range(u.size()):
-		engines[i].throttle = u[i][0] / engines[i].max_thrust
-		apply_force(basis * engines[i].buildable.basis.y * engines[i].thrust, basis * engines[i].buildable.position)
-#		print(engines[i].thrust)
+	if engines_on:
+		var ang = acos(Vector2(camera.basis.z.x, camera.basis.z.z).normalized().dot(Vector2.DOWN))
+		if camera.basis.z.x < 0:
+			ang = -ang
+		var u = controller.compute_command(target_velocity.rotated(Vector3.UP, ang) * speed, ang)
+		for i in range(u.size()):
+			engines[i].throttle = u[i][0] / engines[i].max_thrust
+			apply_force(basis * engines[i].buildable.basis.y * engines[i].thrust, basis * engines[i].buildable.position)
+	#		print(engines[i].thrust)
 
 func vec_sqr(vector:Vector3) -> Vector3:
 	return Vector3(vector.x*vector.x, vector.y*vector.y, vector.z*vector.z)
