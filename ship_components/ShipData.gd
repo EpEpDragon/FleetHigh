@@ -3,7 +3,6 @@ extends Resource
 class_name ShipData
 
 @export var name := "Ship"
-# TODO Component array to use dictionary
 @export var components : Dictionary
 
 ## Initialise ship from saved data

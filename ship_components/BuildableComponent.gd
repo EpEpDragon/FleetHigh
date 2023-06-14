@@ -42,8 +42,12 @@ var preview := true:
 		preview = value
 		if not preview:
 			# TODO Make this not break when preview is set to false before add_child()
+			for c in get_children():
+				if c is MeshInstance3D:
+					c.mesh.surface_set_material(0, main_matertial)
 #			material.transparency = BaseMaterial3D.TRANSPARENCY_DISABLED
-			material.albedo_color = Color(1,1,1,0.5)
+#			material.albedo_color = Color(1,1,1)
+			
 			for wp in weld_points:
 				wp.collision_layer = 0b10
 				wp.weld_area.monitoring = false
@@ -78,45 +82,20 @@ var preview := true:
 			# Physics parameters
 			add_mass()
 
+@export var main_matertial : StandardMaterial3D
+var preview_material := preload("res://ship_components/PreviewMaterial.tres")
 
 ## Contains reference to the parent ship of this buildable.
 @onready var ship : Ship = get_parent()
 
 ## Contains reference to the material used in this buildable.
-@onready var material : StandardMaterial3D = $MeshInstance3D.mesh.surface_get_material(0)
+#@onready var material : StandardMaterial3D = $MeshInstance3D.mesh.surface_get_material(0)
 
-func add_mass():
-	ship.M += mass
-	var relative = position - ship.center_of_mass
-	var CM_change = (mass * (relative))/ship.mass
-	
-	ship.center_of_mass += CM_change
-	
-	ship.inertia = ship.inertia + (ship.mass-mass) * (Vector3.ONE * CM_change.length_squared() - vec_sqr(CM_change))
-	relative = position - ship.center_of_mass
-	ship.inertia += inertia + mass * (Vector3.ONE * relative.length_squared() - vec_sqr(relative))
-
-func remove_mass():
-	ship.M -= mass
-	var relative = position - ship.center_of_mass
-	var CM_change = -(mass * (relative))/ship.mass
-	
-	ship.center_of_mass += CM_change
-	
-	ship.inertia = ship.inertia + (ship.mass+mass) * (Vector3.ONE * CM_change.length_squared() - vec_sqr(CM_change))
-	relative = position - ship.center_of_mass
-	var diff = inertia + mass * (Vector3.ONE * relative.length_squared() - vec_sqr(relative))
-	
-	# Check for floating point errors that make inertia < 0
-	if diff.x > ship.inertia.x || diff.y > ship.inertia.y || diff.z > ship.inertia.z:
-		ship.inertia = Vector3.ZERO
-	else:
-		ship.inertia -= diff
-
-func vec_sqr(vector:Vector3) -> Vector3:
-	return Vector3(vector.x*vector.x, vector.y*vector.y, vector.z*vector.z)
 
 func _ready():
+	for c in get_children():
+		if c is MeshInstance3D:
+			c.mesh.surface_set_material(0, preview_material)
 	disabled = true
 	for wp in weld_points:
 		wp.collision_layer = 0b0
@@ -152,14 +131,47 @@ func _exit_tree():
 #			ship.ship_cleared
 
 
+func add_mass():
+	ship.M += mass
+	var relative = position - ship.center_of_mass
+	var CM_change = (mass * (relative))/ship.mass
+	
+	ship.center_of_mass += CM_change
+	
+	ship.inertia = ship.inertia + (ship.mass-mass) * (Vector3.ONE * CM_change.length_squared() - vec_sqr(CM_change))
+	relative = position - ship.center_of_mass
+	ship.inertia += inertia + mass * (Vector3.ONE * relative.length_squared() - vec_sqr(relative))
+
+
+func remove_mass():
+	ship.M -= mass
+	var relative = position - ship.center_of_mass
+	var CM_change = -(mass * (relative))/ship.mass
+	
+	ship.center_of_mass += CM_change
+	
+	ship.inertia = ship.inertia + (ship.mass+mass) * (Vector3.ONE * CM_change.length_squared() - vec_sqr(CM_change))
+	relative = position - ship.center_of_mass
+	var diff = inertia + mass * (Vector3.ONE * relative.length_squared() - vec_sqr(relative))
+	
+	# Check for floating point errors that make inertia < 0
+	if diff.x > ship.inertia.x || diff.y > ship.inertia.y || diff.z > ship.inertia.z:
+		ship.inertia = Vector3.ZERO
+	else:
+		ship.inertia -= diff
+
+func vec_sqr(vector:Vector3) -> Vector3:
+	return Vector3(vector.x*vector.x, vector.y*vector.y, vector.z*vector.z)
+
+
 ## Checks if this buildable can be placed, used while previewing in build mode.
 func check_connections():
 	if not blocked:
 		for wp in weld_points:
 	#		wp.try_weld()
 			if wp.connection != null:
-				material.albedo_color = Color(0,1,0,0.5)
+				preview_material.albedo_color = Color(0,1,0,0.5)
 				can_weld = true
 				return
 	can_weld = false
-	material.albedo_color = Color(1,0,0,0.5)
+	preview_material.albedo_color = Color(1,0,0,0.5)

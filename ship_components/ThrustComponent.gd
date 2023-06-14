@@ -11,6 +11,7 @@ var active := true:
 var throttle := 0.0:
 	set(value):
 		throttle = clamp(value,0,1)
+		thrust = throttle * max_thrust
 
 
 var linear_thrust_fraction := Vector3.ZERO
@@ -28,7 +29,7 @@ func _ready():
 
 
 func _process(delta):
-	thrust += (throttle * max_thrust - thrust)*20*delta
+#	thrust += (throttle * max_thrust - thrust)*20*delta
 	if thrust / max_thrust < 0.05:
 		particles.emitting = false
 	else:

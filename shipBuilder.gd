@@ -70,7 +70,12 @@ func _physics_process(delta):
 			if result.collider.weld_normal != weld_normal:
 				weld_normal = result.collider.weld_normal
 				component_to_build.rotation = Vector3.ZERO
-			component_to_build.position = result.collider.basis * result.collider.weld_position + result.collider.buildable.position
+			
+			# TODO add file to contain all types
+			if component_to_build.type == 0:
+				component_to_build.position = result.collider.basis * result.collider.weld_position + result.collider.buildable.position
+			else:
+				component_to_build.position = result.collider.buildable.position
 			# If component moves in space reset its blocked state
 			if not previous_position.is_equal_approx(component_to_build.position):
 				component_to_build.blocked = false

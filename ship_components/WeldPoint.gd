@@ -6,7 +6,7 @@ class_name WeldPoint
 var index : int
 
 ## Weld position offset
-@export var weld_position = Vector3(4,0,0)
+@export var weld_position := Vector3(4,0,0)
 
 ## Buildable currently connected to this weld point.
 var connection : Buildable = null

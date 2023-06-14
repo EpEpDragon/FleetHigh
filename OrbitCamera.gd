@@ -47,7 +47,7 @@ var previous_orbit_point = Vector3.ZERO
 func _process(delta):
 	if ship.get_parent().state == 1:
 		state = ORBIT
-		orbit_point = ship.center_of_mass + ship.position
+		orbit_point = ship.center_of_mass + ship.position + Vector3.UP*10
 		position += orbit_point - previous_orbit_point
 		previous_orbit_point = orbit_point
 

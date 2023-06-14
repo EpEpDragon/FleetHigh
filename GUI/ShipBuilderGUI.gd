@@ -71,6 +71,7 @@ func new_ship():
 		var root_block = ComponentDefs.Hull.instantiate()
 		builder.ship.add_child(root_block)
 		root_block.preview = false
+		
 	ship_name.text = ""
 	current_save_name = "New Ship.tres"
 	print("New Ship")

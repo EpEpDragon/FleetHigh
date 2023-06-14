@@ -1,6 +1,7 @@
-[gd_scene load_steps=9 format=3 uid="uid://gt8ugbt2w8iy"]
+[gd_scene load_steps=14 format=3 uid="uid://gt8ugbt2w8iy"]
 
 [ext_resource type="Script" path="res://ship_components/ThrustComponent.gd" id="1_p07am"]
+[ext_resource type="Shader" path="res://ship_components/RocketPloom.gdshader" id="2_j1mna"]
 
 [sub_resource type="Gradient" id="Gradient_8sb7w"]
 colors = PackedColorArray(1, 0.0234375, 0, 1, 1, 0.773438, 0, 1)
@@ -35,6 +36,30 @@ billboard_mode = 1
 [sub_resource type="QuadMesh" id="QuadMesh_i8jnp"]
 material = SubResource("StandardMaterial3D_bp8or")
 
+[sub_resource type="Gradient" id="Gradient_0i5ai"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0, 0.289389, 0.688103, 1)
+colors = PackedColorArray(0, 0.11441, 0.636719, 1, 0.898438, 0.189514, 0.752768, 1, 0.905882, 0.168627, 0.0313726, 0.333333, 0.905882, 0.168627, 0, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_xlyxv"]
+gradient = SubResource("Gradient_0i5ai")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_g885v"]
+render_priority = 0
+shader = ExtResource("2_j1mna")
+shader_parameter/height = 22.653
+shader_parameter/rad = -0.209
+shader_parameter/ripple = 0.019
+shader_parameter/flare = 0.0
+shader_parameter/period = 33.554
+shader_parameter/slope = 1.181
+shader_parameter/color_slope = SubResource("GradientTexture1D_xlyxv")
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_1reci"]
+material = SubResource("ShaderMaterial_g885v")
+height = 1.0
+rings = 64
+
 [node name="ThrustComponent" type="Node3D"]
 script = ExtResource("1_p07am")
 
@@ -47,3 +72,8 @@ fixed_fps = 60
 visibility_aabb = AABB(-1.50402, -6.46559, -1.96083, 3.00805, 12.9312, 3.92167)
 process_material = SubResource("ParticleProcessMaterial_tefxn")
 draw_pass_1 = SubResource("QuadMesh_i8jnp")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(-0.00842984, -0.999964, 1.55606e-10, 0.999964, -0.00842985, 6.00241e-09, -6.00088e-09, 2.06201e-10, 1, 0, 0, 0)
+visible = false
+mesh = SubResource("CylinderMesh_1reci")

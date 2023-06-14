@@ -34,9 +34,9 @@ var error_matrix : Array
 #		 fxyz = Influence on xyz linear
 #		 frotxyz = Influence on xyz angular
 var K : Array
-var linear_scale = 20
+var linear_scale = 50
 var rotation_angle_scale = 0.01
-var rotation_rate_scale = 0.5
+var rotation_rate_scale = 0.1
 
 @onready var ship : Ship = get_parent()
 
@@ -63,7 +63,7 @@ func solve_K() -> void:
 		K[i][4] = torque.dot(axis.Y) * log(ship.inertia.y+1) * rotation_rate_scale
 		K[i][5] = torque.dot(axis.Z) * log(ship.inertia.z+1) * rotation_rate_scale
 
-var max_angle = deg_to_rad(45)
+var max_angle = deg_to_rad(20)
 var max_ref = 15
 func compute_command(target_velocity : Vector3, yaw : float) -> Array:
 	# Linear Velocity & Angular Rate control
@@ -77,12 +77,18 @@ func compute_command(target_velocity : Vector3, yaw : float) -> Array:
 	var rotation_reference = (axis.Y.cross(target_velocity - ship.linear_velocity) * rotation_angle_scale).clamp(Vector3(-max_angle,0,-max_angle), Vector3(max_angle,0,max_angle)) # Clamp for stability
 	rotation_reference.y = yaw
 	var angular_rate_reference = (rotation_reference - ship.rotation)
+	if abs(angular_rate_reference.x) > PI:
+		angular_rate_reference.x -= sign(angular_rate_reference.x)*2*PI
+	if abs(angular_rate_reference.y) > PI:
+		angular_rate_reference.y -= sign(angular_rate_reference.y)*2*PI
+	if abs(angular_rate_reference.z) > PI:
+		angular_rate_reference.z -= sign(angular_rate_reference.z)*2*PI
 	
 	var velocity_error = (target_velocity - ship.linear_velocity).normalized()*log((target_velocity - ship.linear_velocity).length()+1)
 	var angular_velocity_error =  angular_rate_reference - ship.angular_velocity
 	velocity_error *= ship.basis
 	angular_velocity_error *= ship.basis
-	ship.get_child(1).target_position = ship.linear_velocity*ship.basis
+	ship.get_child(1).target_position = ship.linear_velocity * ship.basis
 	ship.get_child(1).position = ship.center_of_mass
 	error_matrix[0][0] = velocity_error.x
 	error_matrix[1][0] = velocity_error.y
