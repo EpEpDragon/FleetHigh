@@ -1,0 +1,30 @@
+[gd_scene load_steps=7 format=3 uid="uid://c68gvl8bpuu6m"]
+
+[ext_resource type="Script" path="res://ship_components/BuildableComponent.gd" id="1_o0ceh"]
+[ext_resource type="Material" uid="uid://bg4ppgyyqtyoc" path="res://ship_components/ShipComponentMaterial.tres" id="2_dfm4j"]
+[ext_resource type="PackedScene" uid="uid://ba3xpcrwx8n5m" path="res://ship_components/WeldPointInternal.tscn" id="3_0rdww"]
+[ext_resource type="Script" path="res://ship_components/fuel_component.gd" id="4_e8auy"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_fwfg4"]
+radius = 2.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_um4e2"]
+material = ExtResource("2_dfm4j")
+radius = 2.0
+height = 4.0
+
+[node name="CollisionShape3D" type="CollisionShape3D"]
+shape = SubResource("SphereShape3D_fwfg4")
+script = ExtResource("1_o0ceh")
+internal = true
+type = 4
+mass = 2.0
+inertia = Vector3(1, 1, 1)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_um4e2")
+
+[node name="WeldArea" parent="." instance=ExtResource("3_0rdww")]
+
+[node name="FuelComponent" type="Node" parent="."]
+script = ExtResource("4_e8auy")

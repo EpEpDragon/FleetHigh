@@ -1,7 +1,8 @@
 extends Node3D
 class_name ThrustComponent
 
-@export var max_thrust = 0.0 # kN
+@export var max_thrust := 0.0 # kN
+@export var fuel_usage := 1.0 # L/s at max thrust
 
 var thrust = 0.0 # kN
 var active := true:

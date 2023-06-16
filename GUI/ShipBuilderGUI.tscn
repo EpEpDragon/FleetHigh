@@ -88,9 +88,26 @@ offset_left = 1795.0
 offset_top = 20.0
 offset_right = 1881.0
 offset_bottom = 74.0
-text = "FPS: 100 PFPS: 200"
+text = "FPS: 100"
 autowrap_mode = 3
 script = ExtResource("3_oio2q")
+
+[node name="FuelLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 1373.0
+offset_top = 24.0
+offset_right = 1540.0
+offset_bottom = 52.0
+text = "current / max"
+autowrap_mode = 3
+
+[node name="FuelBar" type="ProgressBar" parent="."]
+layout_mode = 0
+offset_left = 846.0
+offset_top = 22.0
+offset_right = 1353.0
+offset_bottom = 49.0
+value = 10.0
 
 [connection signal="pressed" from="MarginContainer/VBoxContainer2/HBoxContainer/NewSaveLoadButtons/New" to="." method="_on_new_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer2/HBoxContainer/NewSaveLoadButtons/Save" to="." method="_on_save_pressed"]

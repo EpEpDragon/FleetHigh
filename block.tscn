@@ -27,10 +27,11 @@ script = ExtResource("1_6uxqo")
 
 [node name="GUI" parent="." instance=ExtResource("2_hxyrv")]
 
-[node name="Ship" parent="." node_paths=PackedStringArray("camera") instance=ExtResource("2_ql25y")]
+[node name="Ship" parent="." node_paths=PackedStringArray("camera", "gui") instance=ExtResource("2_ql25y")]
 rotation_order = 1
 speed = 600
 camera = NodePath("../Camera3D")
+gui = NodePath("../GUI")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 

@@ -10,6 +10,9 @@ var state = BUILD:
 			ship.freeze = true
 			ship.position = Vector3(0,100,0)
 			ship.rotation = Vector3.ZERO
+			
+			ship.refuel.emit()
+			ship.current_fuel = ship.max_fuel
 		else:
 			ship.freeze = false
 		state_change = true
@@ -26,8 +29,8 @@ var remove_ray_query := PhysicsRayQueryParameters3D.new()
 var is_place_component := false
 var is_remove_component := false
 
-@onready var ship := $Ship
-@onready var camera := $Camera3D
+@onready var ship : Ship = $Ship
+@onready var camera :Camera3D = $Camera3D
 
 
 func _ready():
@@ -59,6 +62,9 @@ func _unhandled_input(event):
 			current_component_type = ComponentDefs.Hull
 		else:
 			current_component_type = ComponentDefs.HullLarge
+		preview_component(current_component_type)
+	elif event.is_action_pressed('select_fuel_tank'):
+		current_component_type = ComponentDefs.FuelTank
 		preview_component(current_component_type)
 	elif event.is_action_pressed('rotate_component_up'):
 		component_to_build.rotate(weld_normal, deg_to_rad(45))

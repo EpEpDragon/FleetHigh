@@ -1,7 +1,6 @@
-[gd_scene load_steps=8 format=3 uid="uid://bywcog0rgqkyi"]
+[gd_scene load_steps=7 format=3 uid="uid://bywcog0rgqkyi"]
 
 [ext_resource type="Script" path="res://ship_components/BuildableComponent.gd" id="1_xa44i"]
-[ext_resource type="Material" uid="uid://bg4ppgyyqtyoc" path="res://ship_components/ShipComponentMaterial.tres" id="2_ida3n"]
 [ext_resource type="BoxMesh" path="res://ship_components/engine/ShipEngineMeshUpper.tres" id="3_jyn4s"]
 [ext_resource type="BoxMesh" path="res://ship_components/engine/ShipEngineMeshLower.tres" id="4_g67th"]
 [ext_resource type="PackedScene" uid="uid://brsrym1ni44dd" path="res://ship_components/WeldPoint.tscn" id="5_tso5n"]
@@ -17,7 +16,6 @@ internal = true
 type = 3
 mass = 2.0
 inertia = Vector3(1.66, 0.66, 1.66)
-main_matertial = ExtResource("2_ida3n")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.935426, 0)

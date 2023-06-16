@@ -22,6 +22,8 @@ func init_ship(ship : Ship):
 				component_instance = load("res://ship_components/engine/ShipEngine.tscn").instantiate()
 			ComponentDefs.Type.THRUSTER_LARGE:
 				component_instance = load("res://ship_components/engine/ShipEngineLarge.tscn").instantiate()
+			ComponentDefs.Type.FUEL_TANK:
+				component_instance = load("res://ship_components/FuelTank/FuleTank.tscn").instantiate()
 		component_instance.component_data = components[c]
 		component_instance.position = components[c].position
 		component_instance.rotation = components[c].rotation

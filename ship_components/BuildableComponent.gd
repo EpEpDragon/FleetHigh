@@ -30,6 +30,8 @@ var weld_points : Array[WeldPoint]
 ## Thrust component of this buildable
 var thrust_component : ThrustComponent
 
+var fuel_component : FuelComponent
+
 ## True when any of the weld points are valid for connection.
 var can_weld := false
 
@@ -45,7 +47,8 @@ var preview := true:
 			# TODO Make this not break when preview is set to false before add_child()
 			for c in get_children():
 				if c is MeshInstance3D:
-					c.mesh.surface_set_material(0, main_matertial)
+#					c.mesh.surface_set_material(0, main_matertial)
+					c.set_surface_override_material(0, null)
 #			material.transparency = BaseMaterial3D.TRANSPARENCY_DISABLED
 #			material.albedo_color = Color(1,1,1)
 			
@@ -56,6 +59,8 @@ var preview := true:
 					wp.get_child(1).monitoring = false
 			if thrust_component:
 				thrust_component.add_thruster()
+			if fuel_component:
+				fuel_component.add_fuel_tank()
 			
 			if loading:
 				key = component_data.key
@@ -83,9 +88,8 @@ var preview := true:
 #			print("--------")
 			
 			# Physics parameters
-			add_mass()
+			add_mass(mass)
 
-@export var main_matertial : StandardMaterial3D
 var preview_material := preload("res://ship_components/PreviewMaterial.tres")
 
 ## Contains reference to the parent ship of this buildable.
@@ -98,7 +102,8 @@ var preview_material := preload("res://ship_components/PreviewMaterial.tres")
 func _ready():
 	for c in get_children():
 		if c is MeshInstance3D:
-			c.mesh.surface_set_material(0, preview_material)
+			c.set_surface_override_material(0, preview_material)
+#			c.mesh.surface_set_material(0, preview_material)
 	disabled = true
 	# TODO make this not use get_child
 	for wp in weld_points:
@@ -129,14 +134,14 @@ func _exit_tree():
 #			print(str(ship.components[c].key)+ ": "+ str(ship.components[c].component_data.welds_data))
 #		print("--------")
 
-		remove_mass()
+		remove_mass(mass)
 		
 		# Used for save loading of new ship
 #		if ship.components.is_empty():
 #			ship.ship_cleared
 
 
-func add_mass():
+func add_mass(mass):
 	ship.M += mass
 	var relative = position - ship.center_of_mass
 	var CM_change = (mass * (relative))/ship.mass
@@ -148,7 +153,7 @@ func add_mass():
 	ship.inertia += inertia + mass * (Vector3.ONE * relative.length_squared() - vec_sqr(relative))
 
 
-func remove_mass():
+func remove_mass(mass):
 	ship.M -= mass
 	var relative = position - ship.center_of_mass
 	var CM_change = -(mass * (relative))/ship.mass

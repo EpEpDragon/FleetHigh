@@ -1,4 +1,5 @@
 extends Control
+class_name ShipGUI
 
 var Ship := preload("res://ship_components/Ship.tscn")
 var SaveButton := preload("res://GUI/SaveFileButton.tscn")
@@ -11,11 +12,12 @@ var selected_save_name : String
 @onready var builder = get_parent()
 @onready var save_list : VBoxContainer = $MarginContainer/VBoxContainer2/PanelContainer/SaveListScroll/SaveList
 @onready var ship_name : LineEdit = $MarginContainer/VBoxContainer2/HBoxContainer/NameEdit
+@onready var fuel_bar : ProgressBar = $FuelBar
+@onready var fuel_label : Label = $FuelLabel
 
 
 func _ready():
 	populate_save_list()
-
 
 func populate_save_list():
 	var saves := DirAccess.get_files_at(save_file_path)
