@@ -1,0 +1,87 @@
+[gd_scene load_steps=7 format=3 uid="uid://dwbxf7lvgsq12"]
+
+[ext_resource type="Script" path="res://ship_components/BuildableComponent.gd" id="1_r7tfu"]
+[ext_resource type="Material" uid="uid://bg4ppgyyqtyoc" path="res://ship_components/ShipComponentMaterial.tres" id="2_phwjq"]
+[ext_resource type="BoxMesh" uid="uid://c0178jrbd257j" path="res://ship_components/hull/ship_component_mesh.tres" id="3_o3t87"]
+[ext_resource type="PackedScene" uid="uid://brsrym1ni44dd" path="res://ship_components/WeldPoint.tscn" id="4_gupov"]
+[ext_resource type="PackedScene" uid="uid://ba3xpcrwx8n5m" path="res://ship_components/WeldPointInternal.tscn" id="5_mg3ev"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_i04jq"]
+size = Vector3(8, 8, 8)
+
+[node name="ShipComponent" type="CollisionShape3D"]
+shape = SubResource("BoxShape3D_i04jq")
+script = ExtResource("1_r7tfu")
+size = 8
+type = 1
+mass = 4.0
+inertia = Vector3(5.333, 5.333, 5.333)
+main_matertial = ExtResource("2_phwjq")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1.9, 0, 0, 0, 1, 3.5, 0, 3.5)
+mesh = ExtResource("3_o3t87")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1.9, 0, 0, 0, 1, 3.5, 0, -3.5)
+mesh = ExtResource("3_o3t87")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1.9, 0, 0, 0, 1, -3.5, 0, -3.5)
+mesh = ExtResource("3_o3t87")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1.9, 0, 0, 0, 1, -3.5, 0, 3.5)
+mesh = ExtResource("3_o3t87")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.37114e-08, -1.9, 0, 1, -8.30516e-08, 0, 0, 0, 1, -0.012431, -3.5, 3.5)
+mesh = ExtResource("3_o3t87")
+
+[node name="MeshInstance3D6" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.37114e-08, -1.9, 0, 1, -8.30516e-08, 0, 0, 0, 1, -0.012431, -3.5, -3.5)
+mesh = ExtResource("3_o3t87")
+
+[node name="MeshInstance3D7" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.37114e-08, -1.9, 0, 1, -8.30516e-08, 0, 0, 0, 1, 0.012431, 3.5, -3.5)
+mesh = ExtResource("3_o3t87")
+
+[node name="MeshInstance3D8" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.37114e-08, -1.9, 0, 1, -8.30516e-08, 0, 0, 0, 1, 0.012431, 3.5, 3.5)
+mesh = ExtResource("3_o3t87")
+
+[node name="MeshInstance3D9" type="MeshInstance3D" parent="."]
+transform = Transform3D(1.91069e-15, 8.30516e-08, 1, 1, -8.30516e-08, -3.59989e-21, 4.37114e-08, 1.9, -4.37114e-08, 3.5, -3.5, 0.0151187)
+mesh = ExtResource("3_o3t87")
+
+[node name="MeshInstance3D10" type="MeshInstance3D" parent="."]
+transform = Transform3D(1.91069e-15, 8.30516e-08, 1, 1, -8.30516e-08, -3.59989e-21, 4.37114e-08, 1.9, -4.37114e-08, -3.5, -3.5, 0.00974325)
+mesh = ExtResource("3_o3t87")
+
+[node name="MeshInstance3D11" type="MeshInstance3D" parent="."]
+transform = Transform3D(1.91069e-15, 8.30516e-08, 1, 1, -8.30516e-08, -3.59989e-21, 4.37114e-08, 1.9, -4.37114e-08, -3.5, 3.5, -0.0151187)
+mesh = ExtResource("3_o3t87")
+
+[node name="MeshInstance3D12" type="MeshInstance3D" parent="."]
+transform = Transform3D(1.91069e-15, 8.30516e-08, 1, 1, -8.30516e-08, -3.59989e-21, 4.37114e-08, 1.9, -4.37114e-08, 3.5, 3.5, -0.00974325)
+mesh = ExtResource("3_o3t87")
+
+[node name="WeldPoint" parent="." instance=ExtResource("4_gupov")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)
+
+[node name="WeldPoint2" parent="." instance=ExtResource("4_gupov")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -4, 0, 0)
+
+[node name="WeldPoint3" parent="." instance=ExtResource("4_gupov")]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 4, 0)
+
+[node name="WeldPoint4" parent="." instance=ExtResource("4_gupov")]
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0, -3.5, 0)
+
+[node name="WeldPoint5" parent="." instance=ExtResource("4_gupov")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 4)
+
+[node name="WeldPoint6" parent="." instance=ExtResource("4_gupov")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, -4)
+
+[node name="WeldArea" parent="." instance=ExtResource("5_mg3ev")]

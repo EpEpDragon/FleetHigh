@@ -11,11 +11,12 @@ var loading := true
 ## Used for component saving/loading
 var component_data : ComponentData
 
-## Possible buildable types
-enum Type {HULL, THRUSTER}
+@export var internal := false
+
+@export var size := 4
 
 ## Type of the buildable
-@export var type := Type.HULL
+@export var type : ComponentDefs.Type
 
 ## Mass of the buildable.
 @export var mass := 0.0 # tonne
@@ -48,9 +49,11 @@ var preview := true:
 #			material.transparency = BaseMaterial3D.TRANSPARENCY_DISABLED
 #			material.albedo_color = Color(1,1,1)
 			
+			# TODO make this not use get_child
 			for wp in weld_points:
-				wp.collision_layer = 0b10
-				wp.weld_area.monitoring = false
+				if wp.get_child(1):
+					wp.get_child(1).collision_layer = 0b10
+					wp.get_child(1).monitoring = false
 			if thrust_component:
 				thrust_component.add_thruster()
 			
@@ -97,8 +100,10 @@ func _ready():
 		if c is MeshInstance3D:
 			c.mesh.surface_set_material(0, preview_material)
 	disabled = true
+	# TODO make this not use get_child
 	for wp in weld_points:
-		wp.collision_layer = 0b0
+		if wp.get_child(1):
+			wp.get_child(1).collision_layer = 0b0
 	
 	# Initialise component data if none exists (not loading ship)
 	if not component_data:

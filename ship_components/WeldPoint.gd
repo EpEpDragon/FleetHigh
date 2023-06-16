@@ -5,9 +5,6 @@ class_name WeldPoint
 ## Index of this weld point in parent buildable
 var index : int
 
-## Weld position offset
-@export var weld_position := Vector3(4,0,0)
-
 ## Buildable currently connected to this weld point.
 var connection : Buildable = null
 
@@ -17,35 +14,35 @@ var connection : Buildable = null
 ## Normal vector to this weld point.
 @onready var weld_normal := buildable.basis * basis.x
 
-## Area3D used for checking valid welds.
-@onready var weld_area : Area3D = $WeldArea
+## Weld position offset
+@onready var weld_position : Vector3 = Vector3(1,0,0) * buildable.size
 
 func _ready():
 #	weld_data = WeldData.new()
 	index = buildable.weld_points.size()
 	buildable.weld_points.append(self)
 
-# Set up connection
-func _on_weld_area_area_entered(area):
+
+func _on_area_entered(area):
 	if buildable.preview:
-		if area.get_parent().connection == null:
+		if area.connection == null:
 			# Self
-			connection = area.get_parent().buildable
-			buildable.component_data.welds_data[index] = area.get_parent().buildable.key
+			connection = area.buildable
+			buildable.component_data.welds_data[index] = area.buildable.key
 			# Other
-			area.get_parent().connection = buildable
-			area.get_parent().buildable.component_data.welds_data[area.get_parent().index] = buildable.ship.next_key
+			area.connection = buildable
+			area.buildable.component_data.welds_data[area.index] = buildable.ship.next_key
 		else:
 			buildable.blocked = true
 
-# Remove connection
-func _on_weld_area_area_exited(area):
-	var to = area.get_parent().connection
+
+func _on_area_exited(area):
+	var to = area.connection
 	if buildable.preview:
 		if to == buildable:
 			# Self
 			connection = null
 			buildable.component_data.welds_data[index] = -1
 			# Other
-			area.get_parent().connection = null
-			area.get_parent().buildable.component_data.welds_data[area.get_parent().index] = -1
+			area.connection = null
+			area.buildable.component_data.welds_data[area.index] = -1

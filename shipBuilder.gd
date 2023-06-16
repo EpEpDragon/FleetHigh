@@ -20,6 +20,7 @@ var weld_normal := Vector3.ZERO
 var state_change = false
 
 var place_ray_query := PhysicsRayQueryParameters3D.new()
+var place_internal_ray_query := PhysicsRayQueryParameters3D.new()
 var remove_ray_query := PhysicsRayQueryParameters3D.new()
 
 var is_place_component := false
@@ -34,6 +35,11 @@ func _ready():
 	place_ray_query.collide_with_areas = true
 	place_ray_query.collide_with_bodies = false
 	place_ray_query.collision_mask = 0b10
+	
+	place_internal_ray_query.collide_with_areas = true
+	place_internal_ray_query.collide_with_bodies = false
+	place_internal_ray_query.collision_mask = 0b100
+	
 	preview_component(current_component_type)
 
 
@@ -43,10 +49,16 @@ func _unhandled_input(event):
 	elif event.is_action_pressed('remove_component'):
 		is_remove_component = true
 	elif event.is_action_pressed('selectengine'):
-		current_component_type = ComponentDefs.Thruster
+		if current_component_type == ComponentDefs.Thruster:
+			current_component_type = ComponentDefs.ThrusterLarge
+		else:
+			current_component_type = ComponentDefs.Thruster
 		preview_component(current_component_type)
 	elif event.is_action_pressed('selecthull'):
-		current_component_type = ComponentDefs.Hull
+		if current_component_type == ComponentDefs.HullLarge:
+			current_component_type = ComponentDefs.Hull
+		else:
+			current_component_type = ComponentDefs.HullLarge
 		preview_component(current_component_type)
 	elif event.is_action_pressed('rotate_component_up'):
 		component_to_build.rotate(weld_normal, deg_to_rad(45))
@@ -65,17 +77,21 @@ func _physics_process(delta):
 		
 		# Place/Remove component
 	#	if state == BUILD:
-		var result = mouse_ray_query(place_ray_query)
+		var result : Dictionary
+		if component_to_build.internal:
+			result = mouse_ray_query(place_internal_ray_query)
+		else:
+			result = mouse_ray_query(place_ray_query)
 		if result:
-			if result.collider.weld_normal != weld_normal:
-				weld_normal = result.collider.weld_normal
+			if result.normal != weld_normal:
+				weld_normal = result.normal
 				component_to_build.rotation = Vector3.ZERO
 			
 			# TODO add file to contain all types
-			if component_to_build.type == 0:
-				component_to_build.position = result.collider.basis * result.collider.weld_position + result.collider.buildable.position
-			else:
+			if component_to_build.internal:
 				component_to_build.position = result.collider.buildable.position
+			else:
+				component_to_build.position = weld_normal * ((result.collider.get_parent().buildable.size + component_to_build.size) / 2) + result.collider.get_parent().buildable.position
 			# If component moves in space reset its blocked state
 			if not previous_position.is_equal_approx(component_to_build.position):
 				component_to_build.blocked = false

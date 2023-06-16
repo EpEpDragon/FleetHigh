@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://ba3xpcrwx8n5m"]
+
+[ext_resource type="Script" path="res://ship_components/WeldPoint.gd" id="1_is2ct"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5kvum"]
+
+[node name="WeldArea" type="Area3D"]
+collision_layer = 12
+collision_mask = 12
+script = ExtResource("1_is2ct")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_5kvum")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered" flags=18]
+[connection signal="area_exited" from="." to="." method="_on_area_exited" flags=18]

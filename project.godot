@@ -136,8 +136,9 @@ toggle_engines_on={
 [layer_names]
 
 3d_physics/layer_1="general"
-3d_physics/layer_2="buildable_placement"
-3d_physics/layer_3="buildable_welding"
+3d_physics/layer_2="placement"
+3d_physics/layer_3="placement_internal"
+3d_physics/layer_4="weld_point"
 
 [physics]
 

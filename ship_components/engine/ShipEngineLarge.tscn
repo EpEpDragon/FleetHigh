@@ -1,0 +1,35 @@
+[gd_scene load_steps=8 format=3 uid="uid://bywcog0rgqkyi"]
+
+[ext_resource type="Script" path="res://ship_components/BuildableComponent.gd" id="1_xa44i"]
+[ext_resource type="Material" uid="uid://bg4ppgyyqtyoc" path="res://ship_components/ShipComponentMaterial.tres" id="2_ida3n"]
+[ext_resource type="BoxMesh" path="res://ship_components/engine/ShipEngineMeshUpper.tres" id="3_jyn4s"]
+[ext_resource type="BoxMesh" path="res://ship_components/engine/ShipEngineMeshLower.tres" id="4_g67th"]
+[ext_resource type="PackedScene" uid="uid://brsrym1ni44dd" path="res://ship_components/WeldPoint.tscn" id="5_tso5n"]
+[ext_resource type="PackedScene" uid="uid://gt8ugbt2w8iy" path="res://ship_components/ThrustComponent.tscn" id="6_tkey4"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gibld"]
+size = Vector3(4, 8, 4)
+
+[node name="ShipEngine" type="CollisionShape3D"]
+shape = SubResource("BoxShape3D_gibld")
+script = ExtResource("1_xa44i")
+internal = true
+type = 3
+mass = 2.0
+inertia = Vector3(1.66, 0.66, 1.66)
+main_matertial = ExtResource("2_ida3n")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.935426, 0)
+mesh = ExtResource("3_jyn4s")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, -3.00095, 0)
+mesh = ExtResource("4_g67th")
+
+[node name="WeldPoint" parent="." instance=ExtResource("5_tso5n")]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="ThrustComponent" parent="." instance=ExtResource("6_tkey4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 0)
+max_thrust = 500.0
