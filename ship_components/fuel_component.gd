@@ -17,13 +17,13 @@ func _exit_tree():
 	if not owner.preview:
 		owner.ship.max_fuel -= max_fuel
 		owner.ship.wet_fuel_tanks -= 1
-		owner.remove_mass(max_fuel * 422.8/1000_000)
+#		owner.remove_mass(max_fuel * 422.8/1000_000)
 	
 func add_fuel_tank():
 	owner.ship.max_fuel += max_fuel
 	owner.ship.current_fuel = owner.ship.max_fuel
 	owner.ship.wet_fuel_tanks += 1
-	owner.add_mass(max_fuel * 422.8/1000_000) # Methane
+#	owner.add_mass(max_fuel * 422.8/1000_000) # Methane
 	owner.ship.use_fuel.connect(use_fuel)
 	owner.ship.refuel.connect(refuel)
 
