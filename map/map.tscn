@@ -1,0 +1,70 @@
+[gd_scene load_steps=12 format=3 uid="uid://ds7cx04j0xtdn"]
+
+[ext_resource type="Material" uid="uid://b46wgpottai3t" path="res://map/map_material.tres" id="1_hi0he"]
+[ext_resource type="Shader" path="res://map/map_sphere.gdshader" id="2_8mpey"]
+[ext_resource type="FastNoiseLite" uid="uid://bo5uoo4xw7shx" path="res://map/height_noise.tres" id="2_k5i3c"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_udhi0"]
+material = ExtResource("1_hi0he")
+size = Vector2(200, 200)
+subdivide_width = 400
+subdivide_depth = 400
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_h7w5f"]
+noise_type = 3
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_0cf63"]
+seamless = true
+noise = SubResource("FastNoiseLite_h7w5f")
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_hf332"]
+width = 4096
+height = 4096
+seamless = true
+noise = ExtResource("2_k5i3c")
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_lokey"]
+width = 4096
+height = 4096
+seamless = true
+as_normal_map = true
+noise = ExtResource("2_k5i3c")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2evhr"]
+render_priority = 0
+shader = ExtResource("2_8mpey")
+shader_parameter/height_0 = SubResource("NoiseTexture2D_0cf63")
+shader_parameter/height_1 = SubResource("NoiseTexture2D_hf332")
+shader_parameter/height_normal_1 = SubResource("NoiseTexture2D_lokey")
+
+[sub_resource type="SphereMesh" id="SphereMesh_aohad"]
+material = SubResource("ShaderMaterial_2evhr")
+radius = 500.0
+height = 1000.0
+radial_segments = 264
+rings = 128
+
+[sub_resource type="Environment" id="Environment_fff68"]
+tonemap_mode = 3
+adjustment_enabled = true
+
+[node name="Node3D" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_udhi0")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.42791, -0.188378, -0.883972, -4.32902e-09, -0.978039, 0.208424, -0.903821, 0.0891866, 0.418512, 37.0007, -6.85705, -72.6952)
+light_energy = 0.5
+shadow_normal_bias = 4.224
+
+[node name="DirectionalLight3D2" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.0283574, -0.497963, 0.866735, -0.885919, -0.389077, -0.25252, 0.462972, -0.775018, -0.430121, 18.9944, -15.6821, -61.4425)
+light_energy = 0.1
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 153.461, 0, 714.348)
+mesh = SubResource("SphereMesh_aohad")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_fff68")

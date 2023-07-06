@@ -1,9 +1,9 @@
 [gd_scene load_steps=10 format=3 uid="uid://c5hefv3skmb6n"]
 
-[ext_resource type="Script" path="res://shipBuilder.gd" id="1_6uxqo"]
-[ext_resource type="PackedScene" uid="uid://4jttidsdkwjm" path="res://OrbitCamera.tscn" id="2_8dld3"]
-[ext_resource type="PackedScene" uid="uid://ciy3fqhmq0y3a" path="res://GUI/ShipBuilderGUI.tscn" id="2_hxyrv"]
-[ext_resource type="PackedScene" uid="uid://72bsbpa33sdo" path="res://ship_components/Ship.tscn" id="2_ql25y"]
+[ext_resource type="Script" path="res://shipBuilder.gd" id="1_plurr"]
+[ext_resource type="PackedScene" uid="uid://ciy3fqhmq0y3a" path="res://GUI/ShipBuilderGUI.tscn" id="2_g2q4i"]
+[ext_resource type="PackedScene" uid="uid://72bsbpa33sdo" path="res://ship_components/Ship.tscn" id="3_mwa2p"]
+[ext_resource type="PackedScene" uid="uid://4jttidsdkwjm" path="res://OrbitCamera.tscn" id="4_044i5"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_1po4m"]
 
@@ -23,11 +23,11 @@ radius = 1.0
 height = 2.0
 
 [node name="ShipBuilder" type="Node3D"]
-script = ExtResource("1_6uxqo")
+script = ExtResource("1_plurr")
 
-[node name="GUI" parent="." instance=ExtResource("2_hxyrv")]
+[node name="GUI" parent="." instance=ExtResource("2_g2q4i")]
 
-[node name="Ship" parent="." node_paths=PackedStringArray("camera", "gui") instance=ExtResource("2_ql25y")]
+[node name="Ship" parent="." node_paths=PackedStringArray("camera", "gui") instance=ExtResource("3_mwa2p")]
 rotation_order = 1
 speed = 600
 camera = NodePath("../Camera3D")
@@ -48,7 +48,7 @@ transform = Transform3D(0.487037, -1.45148e-08, -0.873381, 0.400901, 0.888425, 0
 shadow_enabled = true
 directional_shadow_max_distance = 1000.0
 
-[node name="Camera3D" parent="." node_paths=PackedStringArray("ship") instance=ExtResource("2_8dld3")]
+[node name="Camera3D" parent="." node_paths=PackedStringArray("ship") instance=ExtResource("4_044i5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 100, 10.395)
 rotation_edit_mode = 0
 ship = NodePath("../Ship")

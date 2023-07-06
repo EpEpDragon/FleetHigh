@@ -1,0 +1,38 @@
+[gd_resource type="ShaderMaterial" load_steps=9 format=3 uid="uid://b46wgpottai3t"]
+
+[ext_resource type="Shader" path="res://map/map.gdshader" id="1_hu6ht"]
+[ext_resource type="FastNoiseLite" uid="uid://bo5uoo4xw7shx" path="res://map/height_noise.tres" id="2_ooiks"]
+
+[sub_resource type="Gradient" id="Gradient_c8qt2"]
+offsets = PackedFloat32Array(0.00526316, 0.0324561, 0.0464912, 0.0653595, 0.0690209, 0.11557, 0.195827, 0.247191, 0.340289)
+colors = PackedColorArray(0, 0, 0, 1, 0.0941176, 0.156863, 0.345098, 1, 0.266667, 0.352941, 0.580392, 1, 0.180392, 0.313726, 0.211765, 1, 0.186701, 0.323151, 0.197984, 1, 0.37434, 0.423644, 0.283175, 1, 0.92549, 0.85098, 0.686275, 1, 0.823218, 0.768104, 0.67956, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_1qi6a"]
+gradient = SubResource("Gradient_c8qt2")
+width = 1024
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_3j5f6"]
+noise_type = 3
+frequency = 0.005
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_yq3cx"]
+noise = SubResource("FastNoiseLite_3j5f6")
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_kjahj"]
+width = 2048
+height = 2048
+noise = ExtResource("2_ooiks")
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_3gx5w"]
+width = 2048
+height = 2048
+as_normal_map = true
+noise = ExtResource("2_ooiks")
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_hu6ht")
+shader_parameter/biomes = SubResource("GradientTexture1D_1qi6a")
+shader_parameter/height_0 = SubResource("NoiseTexture2D_yq3cx")
+shader_parameter/height_1 = SubResource("NoiseTexture2D_kjahj")
+shader_parameter/height_normal_1 = SubResource("NoiseTexture2D_3gx5w")

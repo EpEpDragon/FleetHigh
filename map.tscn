@@ -1,0 +1,54 @@
+[gd_scene load_steps=6 format=3 uid="uid://cxwav5f8i5aj3"]
+
+[ext_resource type="Script" path="res://map/Map.gd" id="1_043y6"]
+
+[sub_resource type="Shader" id="Shader_er5ee"]
+code = "shader_type canvas_item;
+
+uniform vec2 map_position = vec2(0.0, 0.0);
+uniform float zoom = 1.0;
+
+void fragment(){
+	float scale = 1.0 + 1.0 * zoom;
+	vec2 scale_uv = vec2(UV.x / scale, UV.y / scale) + map_position;
+	COLOR = texture(TEXTURE, scale_uv);
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8hdsv"]
+shader = SubResource("Shader_er5ee")
+shader_parameter/map_position = Vector2(0, 0)
+shader_parameter/zoom = 1.0
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_seq4r"]
+noise_type = 3
+frequency = 0.005
+fractal_type = 0
+fractal_gain = 0.424
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_m5bgt"]
+noise = SubResource("FastNoiseLite_seq4r")
+
+[node name="Map" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_043y6")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="CanvasModulate" type="CanvasModulate" parent="CanvasLayer"]
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer"]
+material = SubResource("ShaderMaterial_8hdsv")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = SubResource("NoiseTexture2D_m5bgt")
