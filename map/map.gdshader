@@ -13,15 +13,17 @@ float height(vec2 uv) {
 }
 
 void vertex() {
-	VERTEX.y += height(UV);
+	VERTEX.y += height(UV)*2.0;
 //	VERTEX.y = clamp(VERTEX.y, waterlevel, 1.0);
 //	COLOR = texture(biomes, vec2(VERTEX.y*0.99+0.01,0.0));
 //	COLOR = VERTEX.yyyy;
-	VERTEX.y *= 20.0;
+	VERTEX.y *= 7.0;
 }
 
 void fragment() {
 	NORMAL_MAP = texture(height_normal_1, UV).xyz;
-	ALBEDO = texture(biomes, vec2(height(UV)*0.99+0.01,0.0)).rgb;
+	float h = height(UV);
+	ALBEDO = texture(biomes, vec2(h*0.99+0.01,0.0)).rgb;
+//	ALBEDO = vec3(h,h,h);
 //	ALBEDO = COLOR.rgb*2.5;
 }

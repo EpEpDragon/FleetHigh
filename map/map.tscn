@@ -1,70 +1,115 @@
-[gd_scene load_steps=12 format=3 uid="uid://ds7cx04j0xtdn"]
+[gd_scene load_steps=18 format=3 uid="uid://ds7cx04j0xtdn"]
 
 [ext_resource type="Material" uid="uid://b46wgpottai3t" path="res://map/map_material.tres" id="1_hi0he"]
 [ext_resource type="Shader" path="res://map/map_sphere.gdshader" id="2_8mpey"]
-[ext_resource type="FastNoiseLite" uid="uid://bo5uoo4xw7shx" path="res://map/height_noise.tres" id="2_k5i3c"]
+[ext_resource type="Script" path="res://free_look_camera.gd" id="2_j5dai"]
+[ext_resource type="Script" path="res://map/planet.gd" id="3_qukpk"]
+[ext_resource type="ArrayMesh" uid="uid://bitw23464b66g" path="res://map/planet_mesh.res" id="5_e4t4u"]
+[ext_resource type="Shader" path="res://map/ref_cube.gdshader" id="6_i8ct1"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_udhi0"]
 material = ExtResource("1_hi0he")
 size = Vector2(200, 200)
-subdivide_width = 400
-subdivide_depth = 400
+subdivide_width = 250
+subdivide_depth = 250
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_h7w5f"]
-noise_type = 3
+[sub_resource type="Gradient" id="Gradient_376wm"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0, 0.584239)
+colors = PackedColorArray(0.405178, 0.592296, 1, 1, 0.799669, 0.598581, 0.362236, 1)
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_0cf63"]
-seamless = true
-noise = SubResource("FastNoiseLite_h7w5f")
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_2ydm6"]
+gradient = SubResource("Gradient_376wm")
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_hf332"]
-width = 4096
-height = 4096
-seamless = true
-noise = ExtResource("2_k5i3c")
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_lokey"]
-width = 4096
-height = 4096
-seamless = true
-as_normal_map = true
-noise = ExtResource("2_k5i3c")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_2evhr"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_twqh7"]
 render_priority = 0
 shader = ExtResource("2_8mpey")
-shader_parameter/height_0 = SubResource("NoiseTexture2D_0cf63")
-shader_parameter/height_1 = SubResource("NoiseTexture2D_hf332")
-shader_parameter/height_normal_1 = SubResource("NoiseTexture2D_lokey")
+shader_parameter/dist_type = 0
+shader_parameter/radius = 150.0
+shader_parameter/plates_frequency = 0.01
+shader_parameter/noise_type = 1
+shader_parameter/frequency = 0.005
+shader_parameter/octaves = 1
+shader_parameter/lacunarity = 2.0
+shader_parameter/gain = 0.5
+shader_parameter/plates_warp_freq = 0.021
+shader_parameter/plates_warp_amp = 50.0
+shader_parameter/plates_warp_gain = 4.153
+shader_parameter/plates_color = SubResource("GradientTexture1D_2ydm6")
 
-[sub_resource type="SphereMesh" id="SphereMesh_aohad"]
-material = SubResource("ShaderMaterial_2evhr")
-radius = 500.0
-height = 1000.0
-radial_segments = 264
-rings = 128
+[sub_resource type="BoxMesh" id="BoxMesh_7q6ux"]
+material = SubResource("ShaderMaterial_twqh7")
+subdivide_width = 100
+subdivide_height = 100
+subdivide_depth = 100
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_n00oe"]
+sky_top_color = Color(0.356863, 0.52549, 0.760784, 1)
+ground_bottom_color = Color(0.52549, 0.666667, 0.866667, 1)
+
+[sub_resource type="Sky" id="Sky_uhwu4"]
+sky_material = SubResource("ProceduralSkyMaterial_n00oe")
 
 [sub_resource type="Environment" id="Environment_fff68"]
+background_mode = 1
+background_color = Color(0.615686, 0.698039, 0.929412, 1)
+sky = SubResource("Sky_uhwu4")
+ambient_light_color = Color(0.552941, 0.552941, 0.552941, 1)
+ambient_light_sky_contribution = 0.0
 tonemap_mode = 3
+tonemap_exposure = 0.4
+tonemap_white = 0.66
 adjustment_enabled = true
+adjustment_contrast = 1.15
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mhmbg"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_k5e8p"]
+render_priority = 0
+shader = ExtResource("6_i8ct1")
+
+[sub_resource type="BoxMesh" id="BoxMesh_q2155"]
+material = SubResource("ShaderMaterial_k5e8p")
+size = Vector3(50, 50, 50)
+subdivide_width = 50
+subdivide_height = 50
+subdivide_depth = 50
 
 [node name="Node3D" type="Node3D"]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.151993, 0)
 mesh = SubResource("PlaneMesh_udhi0")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.42791, -0.188378, -0.883972, -4.32902e-09, -0.978039, 0.208424, -0.903821, 0.0891866, 0.418512, 37.0007, -6.85705, -72.6952)
-light_energy = 0.5
-shadow_normal_bias = 4.224
-
-[node name="DirectionalLight3D2" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.0283574, -0.497963, 0.866735, -0.885919, -0.389077, -0.25252, 0.462972, -0.775018, -0.430121, 18.9944, -15.6821, -61.4425)
-light_energy = 0.1
+transform = Transform3D(0.315871, -0.588872, 0.743946, -0.948802, -0.19645, 0.24735, 0.000490867, -0.783988, -0.620776, -0.269404, -4.84755, 1.1936)
+shadow_enabled = true
+directional_shadow_split_1 = 0.574
+directional_shadow_split_2 = 0.734
+directional_shadow_split_3 = 0.784
+directional_shadow_max_distance = 200.0
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 153.461, 0, 714.348)
-mesh = SubResource("SphereMesh_aohad")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35.2625, 0, 307.469)
+mesh = SubResource("BoxMesh_7q6ux")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_fff68")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+script = ExtResource("2_j5dai")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
+transform = Transform3D(70.255, 0, 0, 0, 70.255, 0, 0, 0, 70.255, 0, 0, -222.292)
+mesh = ExtResource("5_e4t4u")
+script = ExtResource("3_qukpk")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_mhmbg")
+offset_right = 466.0
+offset_bottom = 200.0
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 197.104, 83.3151, -225)
+cast_shadow = 0
+mesh = SubResource("BoxMesh_q2155")

@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://cbc1jd1p4ltfj"
+path="res://.godot/imported/compute_flow_step.glsl-277afe3c945d76f8dd92329fdd86d9a2.res"
+
+[deps]
+
+source_file="res://map/compute_flow_step.glsl"
+dest_files=["res://.godot/imported/compute_flow_step.glsl-277afe3c945d76f8dd92329fdd86d9a2.res"]
+
+[params]
+
